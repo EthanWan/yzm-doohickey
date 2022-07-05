@@ -1,0 +1,62 @@
+{
+  "name": "doohickey",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "author": {
+    "name": "EthanWan",
+    "email": "wanshiyi23@gmail.com"
+  },
+  "bin": {
+    "doohickey": "bin/doohickey.js"
+  },
+  "keywords": [
+    "eslint",
+    "config",
+    "doo",
+    "doohickey",
+    "react",
+    "typescript",
+    "prettier",
+    "stylelint",
+    "huksy",
+    "lint-staged"
+  ],
+  "scripts": {
+    "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx ./lib",
+    "prettier": "prettier -c --write \"**/*\""
+  },
+  "dependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/plugin-proposal-class-properties": "^7.17.12",
+    "@babel/plugin-proposal-decorators": "^7.18.2",
+    "@babel/preset-env": "^7.18.6",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "chalk": "^4.1.2",
+    "cosmiconfig": "^7.0.1",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unicorn": "^42.0.0",
+    "fast-glob": "^3.2.11",
+    "ora": "^5.3.0",
+    "prettier": "^2.7.1",
+    "stylelint-config-css-modules": "^4.1.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard": "^26.0.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
+    "yargs-parser": "^21.0.1"
+  },
+  "devDependencies": {
+    "rollup": "^2.75.7"
+  },
+  "license": "MIT"
+}
