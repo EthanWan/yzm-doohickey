@@ -16,13 +16,17 @@ module.exports = async function init(args) {
     await configExists('eslint')
 
     writeFile(
-      './.eslintrc.js',
+      '.eslintrc.js',
       `module.exports = {\n  extends: [require.resolve('doohickey/standard/eslint')],\n};`
     )
     modules.push('eslint')
   }
 
   if (args.p || args.prettier || defaultAction) {
+    access('.edtorconfig').catch((_) => {
+      copyFile(path.resolve(__dirname, '../.editorconfig'), `.editorconfig`)
+    })
+
     await configExists('prettier', {
       searchPlaces: [
         'package.json',
@@ -43,12 +47,8 @@ module.exports = async function init(args) {
       }
     })
 
-    access('.edtorconfig').catch((_) => {
-      copyFile(path.resolve(__dirname, '../.editorconfig'), `.editorconfig`)
-    })
-
     writeFile(
-      './.prettierrc.js',
+      '.prettierrc.js',
       `const { prettier } = require('doohickey');\n\nmodule.exports = {\n  ...prettier,\n};`
     )
     modules.push('prettier')
@@ -58,7 +58,7 @@ module.exports = async function init(args) {
     await configExists('stylelint')
 
     writeFile(
-      './.stylelintrc.js',
+      '.stylelintrc.js',
       `module.exports = {\n  extends: [require.resolve('doohickey/standard/stylelint')],\n};`
     )
     modules.push('stylelint')
@@ -134,7 +134,6 @@ module.exports = async function init(args) {
   }
 }
 
-// TODO: 修改
 const configExists = async (moduleName, cosmiconfigOpt = {}) => {
   const explorer = cosmiconfig(moduleName, cosmiconfigOpt)
   try {
