@@ -9,6 +9,14 @@ if (args.v || args.version) {
   process.exit(0)
 }
 
+const nodeMajorVersion = Number(process.version.slice(1).split('.')[0])
+if (nodeMajorVersion < 12) {
+  throw new Error(
+    `doohickey requires node.js 12.x or up. You are currently running
+      ${process.version}. Please upgrade to a safe, secure version of nodejs!`
+  )
+}
+
 const option = args._[0]
 
 switch (option) {

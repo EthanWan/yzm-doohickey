@@ -217,7 +217,7 @@ module.exports = {
     'no-whitespace-before-property': 'warn',
     'require-yield': 'warn',
     'rest-spread-spacing': ['warn', 'never'],
-    'strict': ['warn', 'never'],
+    strict: ['warn', 'never'],
     'unicode-bom': ['warn', 'never'],
     'use-isnan': 'warn',
     'valid-typeof': 'warn',
@@ -261,8 +261,8 @@ module.exports = {
         {
           files: ['**/*.{ts,tsx}'],
           parser: '@typescript-eslint/parser',
-          rules: tsEslintConfig,
-          extends: ['prettier', 'plugin:@typescript-eslint/recommended']
+          extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
+          rules: tsEslintConfig
         }
       ]
     : [],
