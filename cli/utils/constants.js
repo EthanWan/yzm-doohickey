@@ -38,13 +38,13 @@ const modules = [
   {
     name: 'lint-staged',
     cfgConten: (moduleNames) => {
-      let extend = {
+      let extension = {
         scripts: {
           'lint-staged': 'lint-staged'
         }
       }
       if (moduleNames.includes('eslint')) {
-        extend = {
+        extension = {
           scripts: {
             'lint-staged': 'lint-staged',
             'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx '
@@ -56,20 +56,20 @@ const modules = [
       }
 
       if (moduleNames.includes('stylelint')) {
-        extend['lint-staged'] = {
+        extension['lint-staged'] = {
           '**/*.less': 'stylelint --syntax less',
-          ...(extend['lint-staged'] ?? {})
+          ...(extension['lint-staged'] ?? {})
         }
       }
 
       if (moduleNames.includes('prettier')) {
-        extend['lint-staged'] = {
+        extension['lint-staged'] = {
           '**/*.{js,jsx,tsx,ts,less,md,json}': ['prettier --write'],
-          ...(extend['lint-staged'] ?? {})
+          ...(extension['lint-staged'] ?? {})
         }
       }
 
-      return extend
+      return extension
     },
     target: PACKAGE_JSON
   }

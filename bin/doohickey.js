@@ -34,7 +34,7 @@ Options:
       break
     }
     // ingore other options
-    require('../cli/verifyCommitMsg')
+    require('../cli/verify-commit-msg')
     break
   default:
     if (args.h || args.help) {
