@@ -1,4 +1,4 @@
-import { writeFile as write, readFile as read } from 'fs/promises'
+import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
 import { extendPackage, run, logger } from './util.js'
 
@@ -41,8 +41,8 @@ const generateConfigFile = async (modulename, filename, contents) => {
   }
 }
 
-const configExists = async (moduleName, cosmiconfigOpt = {}) => {
-  const explorer = cosmiconfig(moduleName, cosmiconfigOpt)
+const configExists = async (modulename, cosmiconfigOpt = {}) => {
+  const explorer = cosmiconfig(modulename, cosmiconfigOpt)
 
   const file = await explorer.search().catch((err) => {
     return Promise.reject(err)
@@ -50,20 +50,21 @@ const configExists = async (moduleName, cosmiconfigOpt = {}) => {
 
   if (!file) return Promise.resolve(true)
   logger.log('')
-  logger.info(`Configuration already exists in ${file.filepath} !`, file.config)
+  logger.warn(`${modulename}: Configuration already exists in ${file.filepath} !`)
 
   return Promise.resolve(false)
 }
 
 async function generateESLintConfig(module) {
   const config = `module.exports = {
-    extends: [require.resolve('doohickey/standard/eslint')]
+    extends: [require.resolve('yzm-doohickey/standard/eslint')]
 }`
   return generateConfigFile(module, './.eslintrc.js', config)
 }
 
 async function generatePrettierConfig(module) {
   const style = `const { prettier } = require('yzm-doohickey')
+
 module.exports = {
   ...prettier
 }
@@ -103,7 +104,7 @@ insert_final_newline = true
 
 async function generateStyleLintConfig(module) {
   const config = `module.exports = {
-    extends: [require.resolve('doohickey/standard/stylelint')]
+    extends: [require.resolve('yzm-doohickey/standard/stylelint')]
 }`
 
   return generateConfigFile(module, './.stylelintrc.js', config)
@@ -145,6 +146,19 @@ async function extendLintStagedPackage(modules) {
 }
 
 async function initHusky(modules) {
+  try {
+    await access('./.husky')
+    logger.log('')
+    logger.warn(`husky: Configuration already existing !`)
+    return
+  } catch(err) {
+    if (err.code === 'ENOENT') {
+      /* not found file, create it. */
+    } else {
+      throw new Error(`Unknown error reading ${filename}: ${err.message}`)
+    }
+  }
+
   logger.log('')
   await run('npm install husky --save-dev')
   await extendPackage({

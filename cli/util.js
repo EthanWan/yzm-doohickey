@@ -30,8 +30,8 @@ function done(msg, title = null) {
   console.log(format(chalk.bgGreen.black(title ? ` ${title.toUpperCase()} ` : ' DONE ') + '', chalk.green(msg)))
 }
 
-function process(msg, title = null) {
-  console.log(format(chalk.bgYellow.black(title ? ` ${title.toUpperCase()} ` : ' PROCESS ') + '', chalk.yellow(msg)))
+function warn(msg, title = null) {
+  console.log(format(chalk.bgYellow.black(title ? ` ${title.toUpperCase()} ` : ' WARN ') + '', chalk.yellow(msg)))
 }
 
 function error(msg, title = null) {
@@ -46,7 +46,7 @@ export let logger = {
   log,
   info,
   done,
-  process,
+  warn,
   error
 }
 
