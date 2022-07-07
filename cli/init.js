@@ -194,14 +194,22 @@ async function deal(module, modules) {
 }
 
 export default async function init(args) {
-  // package.json
+  // Check if is a npm project
+  try {
+     await access('./package.json');
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw new Error(`Unable to find package.json file: ${err.message}`);
+    }
+    logger.log('Please run from a directory with your package.json.');
+    return
+  }
 
   // default
   const all = Object.keys(args).length === 1
   logger.log('')
 
   const toDeal = modules.filter((module) => args[module[0]] || args[module] || all)
-  // toInstall
   try {
     await Promise.all(toDeal.map((module) => deal(module, toDeal)))
 
