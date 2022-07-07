@@ -24,4 +24,4 @@ if (!commitRE.test(msg)) {
   process.exit(1)
 }
 
-module.exports = () => {}
+export default () => {}

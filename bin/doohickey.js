@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const yargs = require('yargs-parser')
-const init = require('../cli/init')
+import yargs from 'yargs-parser'
+import init from '../cli/init.js'
 
 const args = yargs(process.argv.slice(2))
 

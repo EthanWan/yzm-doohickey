@@ -1,6 +1,6 @@
 import { writeFile as write, readFile as read } from 'fs/promises'
-import * as cosmiconfig from 'cosmiconfig'
-import { extendPackage, run, logger } from './util'
+import { cosmiconfig } from 'cosmiconfig'
+import { extendPackage, run, logger } from './util.js'
 
 let modules = ['eslint', 'prettier', 'styleline', 'lint-staged']
 
@@ -32,9 +32,9 @@ const generateConfigFile = async (modulename, filename, contents) => {
     )
 
     if (existing) {
-      logger.log('')
       await write(filename, contents)
-      logger.done('configuration is created successfully', module.moduleName)
+      logger.log('')
+      logger.info('Configuration is created successfully', modulename)
     }
   } catch (err) {
     throw err
@@ -49,7 +49,8 @@ const configExists = async (moduleName, cosmiconfigOpt = {}) => {
   })
 
   if (!file) return Promise.resolve(true)
-  logger.info(`configuration already exists in ${file.filepath} !`, file.config)
+  logger.log('')
+  logger.info(`Configuration already exists in ${file.filepath} !`, file.config)
 
   return Promise.resolve(false)
 }
@@ -97,7 +98,7 @@ insert_final_newline = true
     return
   }
   await write(filename, config)
-  // print
+  logger.info('Configuration is created successfully', '.editorconfig')
 }
 
 async function generateStyleLintConfig(module) {
@@ -117,7 +118,8 @@ async function extendLintStagedPackage(modules) {
   if (modules.includes('eslint')) {
     extension = {
       scripts: {
-        'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx '
+        'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
+        ...extension.scripts
       },
       'lint-staged': {
         '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js'
@@ -143,6 +145,7 @@ async function extendLintStagedPackage(modules) {
 }
 
 async function initHusky(modules) {
+  logger.log('')
   await run('npm install husky --save-dev')
   await extendPackage({
     scripts: {
@@ -150,16 +153,10 @@ async function initHusky(modules) {
     }
   })
 
-  await run(`
-    npm run prepare
-  `)
-  await run(`
-    npx husky add .husky/commit-msg "npx --no-install doohickey verifyCommitMsg"
-  `)
+  await run(`npm run prepare`)
+  await run(`npx husky add .husky/commit-msg "npx --no-install doohickey verifyCommitMsg"`)
   if (modules.includes('lint-staged')) {
-    await run(`
-      npx husky add .husky/pre-commit "npx --no-install lint-staged"
-    `)
+    await run(`npx husky add .husky/pre-commit "npx --no-install lint-staged"`)
   }
 }
 
@@ -187,24 +184,24 @@ export default async function init(args) {
 
   // default
   const all = Object.keys(args).length === 1
+  logger.log('')
 
-  console.log('')
   const toDeal = modules.filter((module) => args[module[0]] || args[module] || all)
   // toInstall
   try {
     await Promise.all(toDeal.map((module) => deal(module, toDeal)))
 
     if (args.k || args.husky || all) {
-      initHusky(toDeal)
+      await initHusky(toDeal)
       toDeal.push('husky')
     }
 
     if (toDeal.length > 0) {
       // once
       // await run(`npm install ${moduleNames.join(' ')} --save-dev`)
+      // logger.log('\n')
+      logger.log(` ${logger.done('successfully')}`)
 
-      logger.log('')
-      logger.done()
     } else {
       logger.log(`Option does not exist
 See 'doohickey init --help'`)
