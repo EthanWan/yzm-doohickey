@@ -4,7 +4,7 @@ module.exports = {
     // Including: The Idiomatic CSS Principles, Google's CSS Style Guide, Airbnb's Styleguide, and @mdo's Code Guide.
     'stylelint-config-standard',
     'stylelint-config-css-modules',
-    'stylelint-config-prettier'
+    'stylelint-config-prettier',
   ],
   plugins: ['stylelint-declaration-block-no-ignored-properties'],
   rules: {
@@ -17,7 +17,7 @@ module.exports = {
     'unit-no-unknown': [true, { ignoreUnits: ['rpx'] }],
     // webcomponent
     'selector-type-no-unknown': null,
-    'value-keyword-case': ['lower', { ignoreProperties: ['composes'] }]
+    'value-keyword-case': ['lower', { ignoreProperties: ['composes'] }],
   },
-  ignoreFiles: ['**/*.js', '**/*.jsx', '**/*.tsx', '**/*.ts']
+  ignoreFiles: ['**/*.js', '**/*.jsx', '**/*.tsx', '**/*.ts'],
 }

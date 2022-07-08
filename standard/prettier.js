@@ -1,17 +1,15 @@
+// https://prettier.io/docs/en/options.html
+
 module.exports = {
-  printWidth: 80,
-  rangeStart: 0,
-  tabWidth: 2,
-  useTabs: false,
+  // Specify the line length that the printer will wrap on.
+  printWidth: 100,
+
+  // Print semicolons at the ends of statements.
   semi: false,
+
+  // Use single quotes instead of double quotes.
   singleQuote: true,
+
+  // singleQuote in jsx
   jsxSingleQuote: true,
-  rangeEnd: Infinity,
-  bracketSpacing: true,
-  quoteProps: 'as-needed',
-  trailingComma: 'none',
-  arrowParens: 'always',
-  proseWrap: 'preserve',
-  endOfLine: 'lf',
-  htmlWhitespaceSensitivity: 'css'
 }

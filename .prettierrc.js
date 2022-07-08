@@ -1,5 +1,5 @@
-import { prettier } from './index.js'
+const { prettier } = require('./standard')
 
 module.exports = {
-  ...prettier
+  ...prettier,
 }

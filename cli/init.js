@@ -3,7 +3,6 @@ import { cosmiconfig } from 'cosmiconfig'
 import { extendPackage, runSpawn as run, logger } from './util.js'
 
 let modules = ['eslint', 'prettier', 'styleline', 'lint-staged']
-
 const generateConfigFile = async (modulename, filename, contents) => {
   try {
     const existing = await configExists(
@@ -21,12 +20,12 @@ const generateConfigFile = async (modulename, filename, contents) => {
               '.prettierrc.cjs',
               'prettier.config.js',
               'prettier.config.cjs',
-              '.prettierrc.toml'
+              '.prettierrc.toml',
             ],
             loaders: {
               '.toml': () => 'toml',
-              '.json5': () => 'json5'
-            }
+              '.json5': () => 'json5',
+            },
           }
         : {}
     )
@@ -113,32 +112,32 @@ async function generateStyleLintConfig(module) {
 async function extendLintStagedPackage(modules) {
   let extension = {
     scripts: {
-      'lint-staged': 'lint-staged'
-    }
+      'lint-staged': 'lint-staged',
+    },
   }
   if (modules.includes('eslint')) {
     extension = {
       scripts: {
         'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
-        ...extension.scripts
+        ...extension.scripts,
       },
       'lint-staged': {
-        '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js'
-      }
+        '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js',
+      },
     }
   }
 
   if (modules.includes('stylelint')) {
     extension['lint-staged'] = {
       '**/*.less': 'stylelint --syntax less',
-      ...(extension['lint-staged'] ?? {})
+      ...(extension['lint-staged'] ?? {}),
     }
   }
 
   if (modules.includes('prettier')) {
     extension['lint-staged'] = {
       '**/*.{js,jsx,tsx,ts,less,md,json}': ['prettier --write'],
-      ...(extension['lint-staged'] ?? {})
+      ...(extension['lint-staged'] ?? {}),
     }
   }
 
@@ -151,24 +150,30 @@ async function initHusky(modules) {
     logger.log('')
     logger.warn(`husky: Configuration already existing !`)
     return
-  } catch(err) {
+  } catch (err) {
     if (err.code === 'ENOENT') {
       /* not found file, create it. */
     } else {
-      throw new Error(`Unknown error reading ${filename}: ${err.message}`)
+      throw new Error(`Unknown error reading .husky: ${err.message}`)
     }
   }
 
   logger.log('')
-  await run('npm', ['install','husky','--save-dev'])
+  await run('npm', ['install', 'husky', '--save-dev'])
   await extendPackage({
     scripts: {
-      prepare: 'husky install'
-    }
+      prepare: 'husky install',
+    },
   })
 
   await run('npm', ['run', 'prepare'])
-  await run('npx', ['husky', 'add', '.husky/commit-msg', `"npx --no-install doohickey verifyCommitMsg"`])
+  await run('npx', [
+    'husky',
+    'add',
+    '.husky/commit-msg',
+    `"npx --no-install doohickey verifyCommitMsg"`,
+  ])
+
   if (modules.includes('lint-staged')) {
     await run('npx', ['husky', 'add', '.husky/pre-commit', `"npx --no-install lint-staged"`])
   }
@@ -196,12 +201,12 @@ async function deal(module, modules) {
 export default async function init(args) {
   // Check if is a npm project
   try {
-     await access('./package.json');
+    await access('./package.json')
   } catch (err) {
     if (err.code !== 'ENOENT') {
-      throw new Error(`Unable to find package.json file: ${err.message}`);
+      throw new Error(`Unable to find package.json file: ${err.message}`)
     }
-    logger.log('Please run from a directory with your package.json.');
+    logger.log('Please run from a directory with your package.json.')
     return
   }
 
@@ -223,7 +228,6 @@ export default async function init(args) {
       // await run(`npm install ${moduleNames.join(' ')} --save-dev`)
       // logger.log('\n')
       logger.log(` ${logger.done('successfully')}`)
-
     } else {
       logger.log(`Option does not exist
 See 'doohickey init --help'`)

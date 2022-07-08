@@ -16,5 +16,5 @@ module.exports = {
   // 'node/no-missing-require': 'off',
   // 'node/shebang': 'off',
   'no-dupe-class-members': 'off',
-  'require-atomic-updates': 'off'
+  'require-atomic-updates': 'off',
 }

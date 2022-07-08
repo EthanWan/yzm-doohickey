@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "author": {
     "name": "EthanWan",
     "email": "wanshiyi23@gmail.com"
@@ -24,8 +24,8 @@
     "lint-staged"
   ],
   "scripts": {
-    "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx ./lib",
-    "prettier": "prettier -c --write \"**/*\""
+    "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx **/*.js",
+    "prettier": "prettier --write \"**/*\""
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
@@ -43,7 +43,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unicorn": "^42.0.0",
@@ -56,6 +56,9 @@
     "stylelint-config-standard": "^26.0.0",
     "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
     "yargs-parser": "^21.0.1"
+  },
+  "devDependencies": {
+    "tsc": "^2.0.4"
   },
   "license": "MIT"
 }

@@ -4,17 +4,17 @@ const tsEslintConfig = require('./tsEslintConfig')
 
 const parserOptions = {
   ecmaFeatures: {
-    jsx: true
+    jsx: true,
   },
   babelOptions: {
     presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
-      ['@babel/plugin-proposal-class-properties', { loose: true }]
-    ]
+      ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ],
   },
   requireConfigFile: false,
-  project: './tsconfig.json'
+  project: './tsconfig.json',
 }
 
 const isDirExists = (path) => {
@@ -62,7 +62,7 @@ module.exports = {
     es6: true,
     mocha: true,
     jest: true,
-    jasmine: true
+    jasmine: true,
   },
   rules: {
     strict: ['error', 'never'],
@@ -147,10 +147,10 @@ module.exports = {
           ['&', '|', '^', '~', '<<', '>>', '>>>'],
           ['==', '!=', '===', '!==', '>', '>=', '<', '<='],
           ['&&', '||'],
-          ['in', 'instanceof']
+          ['in', 'instanceof'],
         ],
-        allowSamePrecedence: false
-      }
+        allowSamePrecedence: false,
+      },
     ],
     'no-multi-str': 'warn',
     'no-native-reassign': 'warn',
@@ -182,24 +182,24 @@ module.exports = {
       {
         allowShortCircuit: true,
         allowTernary: true,
-        allowTaggedTemplates: true
-      }
+        allowTaggedTemplates: true,
+      },
     ],
     'no-unused-labels': 'warn',
     'no-unused-vars': [
       'warn',
       {
         args: 'none',
-        ignoreRestSiblings: true
-      }
+        ignoreRestSiblings: true,
+      },
     ],
     'no-use-before-define': [
       'warn',
       {
         functions: false,
         classes: false,
-        variables: false
-      }
+        variables: false,
+      },
     ],
     'no-useless-computed-key': 'warn',
     'no-useless-concat': 'warn',
@@ -210,14 +210,13 @@ module.exports = {
       {
         ignoreDestructuring: false,
         ignoreImport: false,
-        ignoreExport: false
-      }
+        ignoreExport: false,
+      },
     ],
     'no-with': 'warn',
     'no-whitespace-before-property': 'warn',
     'require-yield': 'warn',
     'rest-spread-spacing': ['warn', 'never'],
-    strict: ['warn', 'never'],
     'unicode-bom': ['warn', 'never'],
     'use-isnan': 'warn',
     'valid-typeof': 'warn',
@@ -227,45 +226,45 @@ module.exports = {
         object: 'require',
         property: 'ensure',
         message:
-          'Please use import() instead. More info: https://facebook.github.io/create-react-app/docs/code-splitting'
+          'Please use import() instead. More info: https://facebook.github.io/create-react-app/docs/code-splitting',
       },
       {
         object: 'System',
         property: 'import',
         message:
-          'Please use import() instead. More info: https://facebook.github.io/create-react-app/docs/code-splitting'
-      }
+          'Please use import() instead. More info: https://facebook.github.io/create-react-app/docs/code-splitting',
+      },
     ],
     'getter-return': 'warn',
     'no-var': 'warn',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
   },
   // Shared Settings
   settings: {
     // support import modules from TypeScript files in JavaScript files
     'import/resolver': {
       node: {
-        extensions: isTsProject ? ['.js', '.jsx', '.ts', '.tsx', '.d.ts'] : ['.js', '.jsx']
-      }
+        extensions: isTsProject ? ['.js', '.jsx', '.ts', '.tsx', '.d.ts'] : ['.js', '.jsx'],
+      },
     },
     'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts']
+      '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'],
     },
     'import/extensions': ['.js', '.mjs', '.jsx', '.ts', '.tsx', '.d.ts'],
     'import/external-module-folders': ['node_modules', 'node_modules/@types'],
-    polyfills: ['fetch', 'Promise', 'URL', 'object-assign']
+    polyfills: ['fetch', 'Promise', 'URL', 'object-assign'],
   },
   overrides: isTsProject
     ? [
         {
           files: ['**/*.{ts,tsx}'],
           parser: '@typescript-eslint/parser',
-          extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
-          rules: tsEslintConfig
-        }
+          extends: ['plugin:@typescript-eslint/recommended' /*"prettier"*/],
+          rules: tsEslintConfig,
+        },
       ]
     : [],
 
-  parserOptions
+  parserOptions,
 }

@@ -24,15 +24,27 @@ function info(msg, title = null) {
 }
 
 function done(msg, title = null) {
-  console.log(format(chalk.bgGreen.black(title ? ` ${title.toUpperCase()} ` : ' DONE ') + '', chalk.green(msg)))
+  console.log(
+    format(
+      chalk.bgGreen.black(title ? ` ${title.toUpperCase()} ` : ' DONE ') + '',
+      chalk.green(msg)
+    )
+  )
 }
 
 function warn(msg, title = null) {
-  console.log(format(chalk.bgYellow.black(title ? ` ${title.toUpperCase()} ` : ' WARN ') + '', chalk.yellow(msg)))
+  console.log(
+    format(
+      chalk.bgYellow.black(title ? ` ${title.toUpperCase()} ` : ' WARN ') + '',
+      chalk.yellow(msg)
+    )
+  )
 }
 
 function error(msg, title = null) {
-  console.error(format(chalk.bgRed.white(title ? ` ${title.toUpperCase()} ` :' ERROR ') + '', chalk.red(msg)))
+  console.error(
+    format(chalk.bgRed.white(title ? ` ${title.toUpperCase()} ` : ' ERROR ') + '', chalk.red(msg))
+  )
   if (msg instanceof Error) {
     console.error(msg.stack)
   }
@@ -43,7 +55,7 @@ export let logger = {
   info,
   done,
   warn,
-  error
+  error,
 }
 
 // ====== Logger End ====== //
@@ -60,8 +72,8 @@ export function getPkgManagerCommand(isYarnUsed) {
 }
 
 export async function readJson(jsonPath) {
-  const contents = await read(jsonPath, {encoding: 'utf8'});
-  return JSON.parse(contents);
+  const contents = await read(jsonPath, { encoding: 'utf8' })
+  return JSON.parse(contents)
 }
 
 export async function extendPackage(fields) {
@@ -84,19 +96,17 @@ export async function extendPackage(fields) {
 export async function runSpawn(cmd, args) {
   logger.warn('EXECTING', `${cmd} ${args.join(' ')}`)
 
-  const child = spawn(cmd, args,
-    { stdio: ['inherit', 'pipe', 'inherit'] }
-  );
+  const child = spawn(cmd, args, { stdio: ['inherit', 'pipe', 'inherit'] })
 
-  child.stdout.on('data', function(data){
+  child.stdout.on('data', function (data) {
     logger.log(data.toString())
-  });
+  })
 
-  child.on('close', function(code){
+  child.on('close', function (code) {
     if (code === 0) {
       return Promise.resolve()
     } else {
       throw new Error('Something Wrong!')
     }
-  });
+  })
 }
