@@ -30,7 +30,7 @@ Options:
   -p, --prettier     add the Prettier configuration to project
   -s, --stylelint    add the Prettier configuration to project
   -l, --lintstaged   add the Lint-staged configuration to project
-  -k, --husky        add the .husky to project
+  -k, --husky        add the .husky directory to project and init git hooks
         `)
       break
     }

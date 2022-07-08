@@ -1,10 +1,7 @@
 import { writeFile as write, readFile as read } from 'fs/promises'
-import { exec } from 'child_process'
+import { spawn } from 'child_process'
 import chalk from 'chalk'
-import ora from 'ora'
 import stripAnsi from 'strip-ansi'
-
-const spinner = ora()
 
 // ====== Logger Start ====== //
 
@@ -35,7 +32,6 @@ function warn(msg, title = null) {
 }
 
 function error(msg, title = null) {
-  spinner.stop()
   console.error(format(chalk.bgRed.white(title ? ` ${title.toUpperCase()} ` :' ERROR ') + '', chalk.red(msg)))
   if (msg instanceof Error) {
     console.error(msg.stack)
@@ -85,16 +81,22 @@ export async function extendPackage(fields) {
   return write('./package.json', JSON.stringify(pkg, null, 2))
 }
 
-export async function run(cmd) {
-  spinner.start(format(chalk.bgYellow.black(' EXECTING ') + '', chalk.yellow(cmd)))
+export async function runSpawn(cmd, args) {
+  logger.warn('EXECTING', `${cmd} ${args.join(' ')}`)
 
-  return new Promise((resolve, reject) => {
-    exec(cmd, (err) => {
-      if (err) {
-        return reject(err)
-      }
-      resolve()
-      spinner.stop()
-    })
-  })
+  const child = spawn(cmd, args,
+    { stdio: ['inherit', 'pipe', 'inherit'] }
+  );
+
+  child.stdout.on('data', function(data){
+    logger.log(data.toString())
+  });
+
+  child.on('close', function(code){
+    if (code === 0) {
+      return Promise.resolve()
+    } else {
+      throw new Error('Something Wrong!')
+    }
+  });
 }

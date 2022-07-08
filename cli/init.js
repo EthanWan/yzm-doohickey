@@ -1,6 +1,6 @@
 import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
-import { extendPackage, run, logger } from './util.js'
+import { extendPackage, runSpawn as run, logger } from './util.js'
 
 let modules = ['eslint', 'prettier', 'styleline', 'lint-staged']
 
@@ -160,17 +160,17 @@ async function initHusky(modules) {
   }
 
   logger.log('')
-  await run('npm install husky --save-dev')
+  await run('npm', ['install','husky','--save-dev'])
   await extendPackage({
     scripts: {
       prepare: 'husky install'
     }
   })
 
-  await run(`npm run prepare`)
-  await run(`npx husky add .husky/commit-msg "npx --no-install doohickey verifyCommitMsg"`)
+  await run('npm', ['run', 'prepare'])
+  await run('npx', ['husky', 'add', '.husky/commit-msg', `"npx --no-install doohickey verifyCommitMsg"`])
   if (modules.includes('lint-staged')) {
-    await run(`npx husky add .husky/pre-commit "npx --no-install lint-staged"`)
+    await run('npx', ['husky', 'add', '.husky/pre-commit', `"npx --no-install lint-staged"`])
   }
 }
 
