@@ -7,7 +7,11 @@ const parserOptions = {
     jsx: true,
   },
   babelOptions: {
-    presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+    presets: [
+      '@babel/preset-env',
+      '@babel/preset-react',
+      '@babel/preset-typescript',
+    ],
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       ['@babel/plugin-proposal-class-properties', { loose: true }],
@@ -39,7 +43,9 @@ const isJsMoreTs = async (path = 'src') => {
   return jsFiles.length >= tsFiles.length
 }
 
-const isTsProject = fs.existsSync(path.join(process.cwd() || '.', './tsconfig.json'))
+const isTsProject = fs.existsSync(
+  path.join(process.cwd() || '.', './tsconfig.json')
+)
 
 if (isTsProject) {
   try {
@@ -245,7 +251,9 @@ module.exports = {
     // support import modules from TypeScript files in JavaScript files
     'import/resolver': {
       node: {
-        extensions: isTsProject ? ['.js', '.jsx', '.ts', '.tsx', '.d.ts'] : ['.js', '.jsx'],
+        extensions: isTsProject
+          ? ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
+          : ['.js', '.jsx'],
       },
     },
     'import/parsers': {

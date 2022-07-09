@@ -2,7 +2,7 @@
 
 module.exports = {
   // Specify the line length that the printer will wrap on.
-  printWidth: 100,
+  printWidth: 90,
 
   // Print semicolons at the ends of statements.
   semi: false,
@@ -10,6 +10,10 @@ module.exports = {
   // Use single quotes instead of double quotes.
   singleQuote: true,
 
-  // singleQuote in jsx
+  // User single quote in JSX
   jsxSingleQuote: true,
+
+  // Include parentheses around a sole arrow function parameter.
+  // 'avoid'. Example: x => x
+  arrowParens: 'avoid',
 }

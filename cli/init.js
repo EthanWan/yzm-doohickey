@@ -49,7 +49,9 @@ const configExists = async (modulename, cosmiconfigOpt = {}) => {
 
   if (!file) return Promise.resolve(true)
   logger.log('')
-  logger.warn(`${modulename}: Configuration already exists in ${file.filepath} !`)
+  logger.warn(
+    `${modulename}: Configuration already exists in ${file.filepath} !`
+  )
 
   return Promise.resolve(false)
 }
@@ -175,7 +177,12 @@ async function initHusky(modules) {
   ])
 
   if (modules.includes('lint-staged')) {
-    await run('npx', ['husky', 'add', '.husky/pre-commit', `"npx --no-install lint-staged"`])
+    await run('npx', [
+      'husky',
+      'add',
+      '.husky/pre-commit',
+      `"npx --no-install lint-staged"`,
+    ])
   }
 }
 
@@ -214,7 +221,9 @@ export default async function init(args) {
   const all = Object.keys(args).length === 1
   logger.log('')
 
-  const toDeal = modules.filter((module) => args[module[0]] || args[module] || all)
+  const toDeal = modules.filter(
+    (module) => args[module[0]] || args[module] || all
+  )
   try {
     await Promise.all(toDeal.map((module) => deal(module, toDeal)))
 
@@ -229,8 +238,10 @@ export default async function init(args) {
       // logger.log('\n')
       logger.log(` ${logger.done('successfully')}`)
     } else {
-      logger.log(`Option does not exist
-See 'doohickey init --help'`)
+      logger.log(
+        `Option does not exist
+See 'doohickey init --help'`
+      )
     }
   } catch (err) {
     logger.error(err)
