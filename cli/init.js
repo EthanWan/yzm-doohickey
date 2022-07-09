@@ -1,6 +1,11 @@
 import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
-import { extendPackage, runSpawn as run, logger } from './util.js'
+import {
+  extendPackage,
+  runSpawn as run,
+  logger,
+  getNodePkgManagerCommand as getNPMCommand,
+} from './util.js'
 
 let modules = ['eslint', 'prettier', 'styleline', 'lint-staged']
 const generateConfigFile = async (modulename, filename, contents) => {
@@ -64,10 +69,8 @@ async function generateESLintConfig(module) {
 }
 
 async function generatePrettierConfig(module) {
-  const style = `const { prettier } = require('yzm-doohickey')
-
-module.exports = {
-  ...prettier
+  const style = `module.exports = {
+  ...require('yzm-doohickey/standard/prettier')
 }
 `
   return generateConfigFile(module, './.prettierrc.js', style)
@@ -161,14 +164,14 @@ async function initHusky(modules) {
   }
 
   logger.log('')
-  await run('npm', ['install', 'husky', '--save-dev'])
+  await run(getNPMCommand(), ['install', 'husky', '--save-dev'])
   await extendPackage({
     scripts: {
       prepare: 'husky install',
     },
   })
 
-  await run('npm', ['run', 'prepare'])
+  await run(getNPMCommand(), ['run', 'prepare'])
   await run('npx', [
     'husky',
     'add',
@@ -233,9 +236,9 @@ export default async function init(args) {
     }
 
     if (toDeal.length > 0) {
-      // once
-      // await run(`npm install ${moduleNames.join(' ')} --save-dev`)
-      // logger.log('\n')
+      await run(getNPMCommand(), ['install', '--ignore-scripts'])
+
+      logger.log('')
       logger.log(` ${logger.done('successfully')}`)
     } else {
       logger.log(

@@ -16,4 +16,13 @@ module.exports = {
   // Include parentheses around a sole arrow function parameter.
   // 'avoid'. Example: x => x
   arrowParens: 'avoid',
+
+  // Overrides let you have different configuration for
+  // certain file extensions, folders and specific files.
+  overrides: [
+    {
+      files: '**/*.js',
+      options: { parser: 'json' },
+    },
+  ],
 }

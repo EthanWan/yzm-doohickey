@@ -1,4 +1,5 @@
 import { writeFile as write, readFile as read } from 'fs/promises'
+import { existsSync as exist } from 'fs'
 import { spawn } from 'child_process'
 import chalk from 'chalk'
 import stripAnsi from 'strip-ansi'
@@ -9,7 +10,9 @@ const format = (label, msg) => {
   return msg
     .split('\n')
     .map((line, i) => {
-      return i === 0 ? `${label} ${line}` : line.padStart(stripAnsi(label).length + line.length + 1)
+      return i === 0
+        ? `${label} ${line}`
+        : line.padStart(stripAnsi(label).length + line.length + 1)
     })
     .join('\n')
 }
@@ -20,7 +23,12 @@ function log(msg = '', tag = null) {
 }
 
 function info(msg, title = null) {
-  console.log(format(chalk.bgBlue.white(title ? ` ${title.toUpperCase()} ` : ' INFO ') + '', msg))
+  console.log(
+    format(
+      chalk.bgBlue.white(title ? ` ${title.toUpperCase()} ` : ' INFO ') + '',
+      msg
+    )
+  )
 }
 
 function done(msg, title = null) {
@@ -43,7 +51,10 @@ function warn(msg, title = null) {
 
 function error(msg, title = null) {
   console.error(
-    format(chalk.bgRed.white(title ? ` ${title.toUpperCase()} ` : ' ERROR ') + '', chalk.red(msg))
+    format(
+      chalk.bgRed.white(title ? ` ${title.toUpperCase()} ` : ' ERROR ') + '',
+      chalk.red(msg)
+    )
   )
   if (msg instanceof Error) {
     console.error(msg.stack)
@@ -60,15 +71,15 @@ export let logger = {
 
 // ====== Logger End ====== //
 
-export function isYarnUsed(existsSync /*= fs.existsSync*/) {
+function isYarnUsed(existsSync = exist) {
   if (existsSync('package-lock.json')) {
     return false
   }
   return existsSync('yarn.lock')
 }
 
-export function getPkgManagerCommand(isYarnUsed) {
-  return (isYarnUsed ? 'yarn' : 'npm') + (process.platform === 'win32' ? '.cmd' : '')
+export function getNodePkgManagerCommand(yarn = isYarnUsed()) {
+  return (yarn ? 'yarn' : 'npm') + (process.platform === 'win32' ? '.cmd' : '')
 }
 
 export async function readJson(jsonPath) {
