@@ -4,9 +4,34 @@ import { spawn } from 'child_process'
 import chalk from 'chalk'
 import stripAnsi from 'strip-ansi'
 
+export type LoggerFunction = (msg: string, title?: string | null) => void
+
+export interface Logger {
+  log: LoggerFunction;
+  info: LoggerFunction;
+  done: LoggerFunction;
+  warn: LoggerFunction;
+  error: LoggerFunction;
+}
+
+export interface ExtendPkgObj {
+  scripts: {
+    [key: string]: string
+  }
+  'lint-staged': {
+    [key: string]: string
+  },
+  dependencies: {
+    [key: string]: string
+  },
+  devDependencies: {
+    [key: string]: string
+  }
+}
+
 // ====== Logger Start ====== //
 
-const format = (label, msg) => {
+const format = (label: string, msg: string) => {
   return msg
     .split('\n')
     .map((line, i) => {
@@ -18,11 +43,11 @@ const format = (label, msg) => {
 }
 const chalkTag = (msg) => chalk.bgBlackBright.white.dim(` ${msg} `)
 
-function log(msg = '', tag = null) {
-  tag ? console.log(format(chalkTag(tag), msg)) : console.log(msg)
+function log(msg = '', title) {
+  title ? console.log(format(chalkTag(title), msg)) : console.log(msg)
 }
 
-function info(msg, title = null) {
+function info(msg, title) {
   console.log(
     format(
       chalk.bgBlue.white(title ? ` ${title.toUpperCase()} ` : ' INFO ') + '',
@@ -31,7 +56,7 @@ function info(msg, title = null) {
   )
 }
 
-function done(msg, title = null) {
+function done(msg, title) {
   console.log(
     format(
       chalk.bgGreen.black(title ? ` ${title.toUpperCase()} ` : ' DONE ') + '',
@@ -40,7 +65,7 @@ function done(msg, title = null) {
   )
 }
 
-function warn(msg, title = null) {
+function warn(msg, title) {
   console.log(
     format(
       chalk.bgYellow.black(title ? ` ${title.toUpperCase()} ` : ' WARN ') + '',
@@ -49,7 +74,7 @@ function warn(msg, title = null) {
   )
 }
 
-function error(msg, title = null) {
+function error(msg, title) {
   console.error(
     format(
       chalk.bgRed.white(title ? ` ${title.toUpperCase()} ` : ' ERROR ') + '',
@@ -61,7 +86,7 @@ function error(msg, title = null) {
   }
 }
 
-export let logger = {
+export let logger: Logger = {
   log,
   info,
   done,
@@ -78,16 +103,16 @@ function isYarnUsed(existsSync = exist) {
   return existsSync('yarn.lock')
 }
 
-export function getNodePkgManagerCommand(yarn = isYarnUsed()) {
+export function getNodePkgManagerCommand(yarn: boolean = isYarnUsed()): string {
   return (yarn ? 'yarn' : 'npm') + (process.platform === 'win32' ? '.cmd' : '')
 }
 
-export async function readJson(jsonPath) {
+export async function readJson(jsonPath: string): Promise<string> {
   const contents = await read(jsonPath, { encoding: 'utf8' })
   return JSON.parse(contents)
 }
 
-export async function extendPackage(fields) {
+export async function extendPackage(fields: Partial<ExtendPkgObj>): Promise<void> {
   const pkg = await readJson('./package.json')
   const toMerge = fields
 
@@ -104,7 +129,7 @@ export async function extendPackage(fields) {
   return write('./package.json', JSON.stringify(pkg, null, 2))
 }
 
-export async function runSpawn(cmd, args) {
+export async function runSpawn(cmd: string, args: ReadonlyArray<string>): Promise<void> {
   logger.warn('EXECTING', `${cmd} ${args.join(' ')}`)
 
   const child = spawn(cmd, args, { stdio: ['inherit', 'pipe', 'inherit'] })

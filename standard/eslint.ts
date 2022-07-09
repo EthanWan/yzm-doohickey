@@ -32,6 +32,7 @@ const isDirExists = (path) => {
 
 const isJsMoreTs = async (path = 'src') => {
   let srcEnter = `${path}/src`
+  // Nextjs main enter
   if (await isDirExists(`${path}/pages`)) {
     srcEnter = `${path}/pages`
   }
@@ -268,7 +269,7 @@ module.exports = {
         {
           files: ['**/*.{ts,tsx}'],
           parser: '@typescript-eslint/parser',
-          extends: ['plugin:@typescript-eslint/recommended' /*"prettier"*/],
+          extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
           rules: tsEslintConfig,
         },
       ]

@@ -1,5 +1,7 @@
 import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
+import type { Options } from 'cosmiconfig'
+import type { DoohickeyArgs } from '../bin/doohickey'
 import {
   extendPackage,
   runSpawn as run,
@@ -7,8 +9,11 @@ import {
   getNodePkgManagerCommand as getNPMCommand,
 } from './util.js'
 
-let modules = ['eslint', 'prettier', 'styleline', 'lint-staged']
-const generateConfigFile = async (modulename, filename, contents) => {
+export type ModuleName = "eslint" | 'prettier' | 'stylelint' | 'lint-staged' | 'husky'
+
+let modules: Array<ModuleName> = ['eslint', 'prettier', 'stylelint', 'lint-staged']
+
+async function generateConfigFile(modulename: ModuleName, filename: string, contents: string): Promise<void> {
   try {
     const existing = await configExists(
       modulename,
@@ -45,7 +50,7 @@ const generateConfigFile = async (modulename, filename, contents) => {
   }
 }
 
-const configExists = async (modulename, cosmiconfigOpt = {}) => {
+async function configExists(modulename: ModuleName, cosmiconfigOpt: Options): Promise<boolean> {
   const explorer = cosmiconfig(modulename, cosmiconfigOpt)
 
   const file = await explorer.search().catch((err) => {
@@ -61,14 +66,14 @@ const configExists = async (modulename, cosmiconfigOpt = {}) => {
   return Promise.resolve(false)
 }
 
-async function generateESLintConfig(module) {
+async function generateESLintConfig(module: ModuleName): Promise<void> {
   const config = `module.exports = {
     extends: [require.resolve('yzm-doohickey/standard/eslint')]
 }`
   return generateConfigFile(module, './.eslintrc.js', config)
 }
 
-async function generatePrettierConfig(module) {
+async function generatePrettierConfig(module: ModuleName): Promise<void> {
   const style = `module.exports = {
   ...require('yzm-doohickey/standard/prettier')
 }
@@ -76,7 +81,7 @@ async function generatePrettierConfig(module) {
   return generateConfigFile(module, './.prettierrc.js', style)
 }
 
-async function generateEditorConfig(module) {
+async function generateEditorConfig(): Promise<void> {
   const config = `root = true
 
 [*]
@@ -106,7 +111,7 @@ insert_final_newline = true
   logger.info('Configuration is created successfully', '.editorconfig')
 }
 
-async function generateStyleLintConfig(module) {
+async function generateStyleLintConfig(module: ModuleName) {
   const config = `module.exports = {
     extends: [require.resolve('yzm-doohickey/standard/stylelint')]
 }`
@@ -114,7 +119,7 @@ async function generateStyleLintConfig(module) {
   return generateConfigFile(module, './.stylelintrc.js', config)
 }
 
-async function extendLintStagedPackage(modules) {
+async function extendLintStagedPackage(modules: Array<ModuleName>) {
   let extension = {
     scripts: {
       'lint-staged': 'lint-staged',
@@ -123,6 +128,7 @@ async function extendLintStagedPackage(modules) {
   if (modules.includes('eslint')) {
     extension = {
       scripts: {
+        //@ts-ignore
         'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
         ...extension.scripts,
       },
@@ -189,16 +195,16 @@ async function initHusky(modules) {
   }
 }
 
-async function deal(module, modules) {
+async function deal(module: ModuleName, modules: Array<ModuleName>): Promise<void> {
   switch (module) {
     case 'eslint':
       await generateESLintConfig(module)
       break
     case 'prettier':
-      await generateEditorConfig(module)
+      await generateEditorConfig()
       await generatePrettierConfig(module)
       break
-    case 'styleline':
+    case 'stylelint':
       await generateStyleLintConfig(module)
       break
     case 'lint-staged':
@@ -208,7 +214,7 @@ async function deal(module, modules) {
   }
 }
 
-export default async function init(args) {
+export default async function init(args: DoohickeyArgs) {
   // Check if is a npm project
   try {
     await access('./package.json')

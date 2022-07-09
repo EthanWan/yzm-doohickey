@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2018"],
+    "module": "commonjs",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "pretty": true,
+    "sourceMap": false,
+    "target": "es2018",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "bin/*.ts",
+    "cli/*.ts",
+    "standard/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "test/fixtures/**/*.*"
+  ]
+}

@@ -1,3 +1,10 @@
+
+.DS_Store
+.vscode
+yarn.lock
+yarn-error.log
 node_modules
+dist
+
 TODO.md
 /cli/init.old.js

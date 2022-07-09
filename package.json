@@ -2,29 +2,29 @@
   "name": "yzm-doohickey",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
-  "type": "commonjs",
+  "main": "dist/standard/index.js",
   "author": {
     "name": "EthanWan",
     "email": "wanshiyi23@gmail.com"
   },
   "bin": {
-    "doohickey": "bin/doohickey.js"
+    "doohickey": "dist/bin/doohickey.js"
   },
   "keywords": [
-    "eslint",
-    "config",
-    "doo",
     "doohickey",
     "react",
     "typescript",
+    "eslint",
+    "config",
     "prettier",
     "stylelint",
-    "huksy",
-    "lint-staged"
+    "lint-staged",
+    "huksy"
   ],
   "scripts": {
-    "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx **/*.js",
+    "build": "npm run compile",
+    "compile": "tsc",
+    "lint": "eslint --cache --ext .js,.ts **/*.js",
     "prettier": "prettier --write \"**/*\""
   },
   "dependencies": {
@@ -48,7 +48,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unicorn": "^42.0.0",
     "fast-glob": "^3.2.11",
-    "ora": "^6.1.2",
     "prettier": "^2.7.1",
     "strip-ansi": "^7.0.1",
     "stylelint-config-css-modules": "^4.1.0",
@@ -58,7 +57,8 @@
     "yargs-parser": "^21.0.1"
   },
   "devDependencies": {
-    "tsc": "^2.0.4"
+    "@types/node": "^18.0.3",
+    "typescript": "^4.7.4"
   },
   "license": "MIT"
 }
