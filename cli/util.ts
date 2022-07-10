@@ -1,7 +1,7 @@
 import { writeFile as write, readFile as read } from 'fs/promises'
 import { existsSync as exist } from 'fs'
 import { spawn } from 'child_process'
-import chalk from 'chalk'
+import chalk = require('chalk')
 import stripAnsi from 'strip-ansi'
 
 export type LoggerFunction = (msg: string, title?: string | null) => void
@@ -96,7 +96,7 @@ export let logger: Logger = {
 
 // ====== Logger End ====== //
 
-function isYarnUsed(existsSync = exist) {
+export function isYarnUsed(existsSync = exist) {
   if (existsSync('package-lock.json')) {
     return false
   }
@@ -130,19 +130,17 @@ export async function extendPackage(fields: Partial<ExtendPkgObj>): Promise<void
 }
 
 export async function runSpawn(cmd: string, args: ReadonlyArray<string>): Promise<void> {
-  logger.warn('EXECTING', `${cmd} ${args.join(' ')}`)
+  logger.warn(`${cmd} ${args.join(' ')}`, 'EXECTING')
 
-  const child = spawn(cmd, args, { stdio: ['inherit', 'pipe', 'inherit'] })
+  return new Promise((resolve, reject) => {
+    const child = spawn(cmd, args, { stdio: 'inherit' })
 
-  child.stdout.on('data', function (data) {
-    logger.log(data.toString())
-  })
-
-  child.on('close', function (code) {
-    if (code === 0) {
-      return Promise.resolve()
-    } else {
-      throw new Error('Something Wrong!')
-    }
+    child.on('close', function (code) {
+      if (code === 0) {
+        resolve()
+      } else {
+        reject('Something Wrong!')
+      }
+    })
   })
 }

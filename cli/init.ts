@@ -6,6 +6,7 @@ import {
   extendPackage,
   runSpawn as run,
   logger,
+  isYarnUsed,
   getNodePkgManagerCommand as getNPMCommand,
 } from './util.js'
 
@@ -41,8 +42,8 @@ async function generateConfigFile(modulename: ModuleName, filename: string, cont
     )
 
     if (existing) {
+      logger.log(`Writing ${filename}...`);
       await write(filename, contents)
-      logger.log('')
       logger.info('Configuration is created successfully', modulename)
     }
   } catch (err) {
@@ -107,8 +108,9 @@ insert_final_newline = true
     logger.log(`No edits needed in ${filename}`)
     return
   }
+  logger.log(`Writing ${filename}`);
   await write(filename, config)
-  logger.info('Configuration is created successfully', '.editorconfig')
+  logger.info('Configuration is created successfully', 'editorconfig')
 }
 
 async function generateStyleLintConfig(module: ModuleName) {
@@ -138,6 +140,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
     }
   }
 
+  // Defalut syntax less
   if (modules.includes('stylelint')) {
     extension['lint-staged'] = {
       '**/*.less': 'stylelint --syntax less',
@@ -170,7 +173,7 @@ async function initHusky(modules) {
   }
 
   logger.log('')
-  await run(getNPMCommand(), ['install', 'husky', '--save-dev'])
+  await run(getNPMCommand(), [isYarnUsed ? 'add' : 'install', 'husky', '--save-dev'])
   await extendPackage({
     scripts: {
       prepare: 'husky install',
@@ -242,7 +245,11 @@ export default async function init(args: DoohickeyArgs) {
     }
 
     if (toDeal.length > 0) {
-      await run(getNPMCommand(), ['install', '--ignore-scripts'])
+      let flags = ['--ignore-scripts']
+      if (!isYarnUsed) {
+        flags.unshift('install')
+      }
+      await run(getNPMCommand(), flags)
 
       logger.log('')
       logger.log(` ${logger.done('successfully')}`)

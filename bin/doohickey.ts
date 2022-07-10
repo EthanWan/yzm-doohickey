@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import yargs from 'yargs-parser'
+import * as yargs from 'yargs-parser'
 import init from '../cli/init.js'
 
 export interface DoohickeyArgs {
