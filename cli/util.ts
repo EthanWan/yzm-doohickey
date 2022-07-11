@@ -7,11 +7,11 @@ import stripAnsi from 'strip-ansi'
 export type LoggerFunction = (msg: string, title?: string | null) => void
 
 export interface Logger {
-  log: LoggerFunction;
-  info: LoggerFunction;
-  done: LoggerFunction;
-  warn: LoggerFunction;
-  error: LoggerFunction;
+  log: LoggerFunction
+  info: LoggerFunction
+  done: LoggerFunction
+  warn: LoggerFunction
+  error: LoggerFunction
 }
 
 export interface ExtendPkgObj {
@@ -20,10 +20,10 @@ export interface ExtendPkgObj {
   }
   'lint-staged': {
     [key: string]: string
-  },
+  }
   dependencies: {
     [key: string]: string
-  },
+  }
   devDependencies: {
     [key: string]: string
   }
@@ -41,7 +41,7 @@ const format = (label: string, msg: string) => {
     })
     .join('\n')
 }
-const chalkTag = (msg) => chalk.bgBlackBright.white.dim(` ${msg} `)
+const chalkTag = msg => chalk.bgBlackBright.white.dim(` ${msg} `)
 
 function log(msg = '', title) {
   title ? console.log(format(chalkTag(title), msg)) : console.log(msg)
@@ -49,10 +49,7 @@ function log(msg = '', title) {
 
 function info(msg, title) {
   console.log(
-    format(
-      chalk.bgBlue.white(title ? ` ${title.toUpperCase()} ` : ' INFO ') + '',
-      msg
-    )
+    format(chalk.bgBlue.white(title ? ` ${title.toUpperCase()} ` : ' INFO ') + '', msg)
   )
 }
 
@@ -86,7 +83,7 @@ function error(msg, title) {
   }
 }
 
-export let logger: Logger = {
+export const logger: Logger = {
   log,
   info,
   done,

@@ -3,21 +3,21 @@ import * as yargs from 'yargs-parser'
 import init from '../cli/init.js'
 
 export interface DoohickeyArgs {
-  _: Array<any>;
-  h?: boolean;
-  help?: boolean;
-  v?: boolean;
-  version?: boolean;
-  e?: boolean;
-  eslint?: boolean;
-  p?: boolean;
-  prettier?: boolean;
-  s?: boolean;
-  stylelint?: boolean;
-  l?: boolean;
-  lintstaged?: boolean;
-  k?: boolean;
-  husky?: boolean;
+  _: Array<string>
+  h?: boolean
+  help?: boolean
+  v?: boolean
+  version?: boolean
+  e?: boolean
+  eslint?: boolean
+  p?: boolean
+  prettier?: boolean
+  s?: boolean
+  stylelint?: boolean
+  l?: boolean
+  lintstaged?: boolean
+  k?: boolean
+  husky?: boolean
 }
 
 const args: DoohickeyArgs = yargs(process.argv.slice(2))

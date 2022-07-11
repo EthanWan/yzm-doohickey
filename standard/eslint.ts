@@ -7,11 +7,7 @@ const parserOptions = {
     jsx: true,
   },
   babelOptions: {
-    presets: [
-      '@babel/preset-env',
-      '@babel/preset-react',
-      '@babel/preset-typescript',
-    ],
+    presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       ['@babel/plugin-proposal-class-properties', { loose: true }],
@@ -21,8 +17,8 @@ const parserOptions = {
   project: './tsconfig.json',
 }
 
-const isDirExists = (path) => {
-  return new Promise((resolve) => {
+const isDirExists = path => {
+  return new Promise(resolve => {
     fs.stat(path, (error, stats) => {
       if (error) return resolve(false)
       return resolve(stats.isDirectory())
@@ -44,13 +40,11 @@ const isJsMoreTs = async (path = 'src') => {
   return jsFiles.length >= tsFiles.length
 }
 
-const isTsProject = fs.existsSync(
-  path.join(process.cwd() || '.', './tsconfig.json')
-)
+const isTsProject = fs.existsSync(path.join(process.cwd() || '.', './tsconfig.json'))
 
 if (isTsProject) {
   try {
-    isJsMoreTs(process.cwd()).then((jsMoreTs) => {
+    isJsMoreTs(process.cwd()).then(jsMoreTs => {
       if (!jsMoreTs) return
       console.log('Remove tsconfig.json if it’s not a TypeScript project')
     })
@@ -269,7 +263,10 @@ module.exports = {
         {
           files: ['**/*.{ts,tsx}'],
           parser: '@typescript-eslint/parser',
-          extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+          extends: [
+            'plugin:@typescript-eslint/recommended',
+            'plugin:prettier/recommended',
+          ],
           rules: tsEslintConfig,
         },
       ]

@@ -10,11 +10,15 @@ import {
   getNodePkgManagerCommand as getNPMCommand,
 } from './util.js'
 
-export type ModuleName = "eslint" | 'prettier' | 'stylelint' | 'lint-staged' | 'husky'
+export type ModuleName = 'eslint' | 'prettier' | 'stylelint' | 'lint-staged' | 'husky'
 
-let modules: Array<ModuleName> = ['eslint', 'prettier', 'stylelint', 'lint-staged']
+const modules: Array<ModuleName> = ['eslint', 'prettier', 'stylelint', 'lint-staged']
 
-async function generateConfigFile(modulename: ModuleName, filename: string, contents: string): Promise<void> {
+async function generateConfigFile(
+  modulename: ModuleName,
+  filename: string,
+  contents: string
+): Promise<void> {
   try {
     const existing = await configExists(
       modulename,
@@ -42,7 +46,7 @@ async function generateConfigFile(modulename: ModuleName, filename: string, cont
     )
 
     if (existing) {
-      logger.log(`Writing ${filename}...`);
+      logger.log(`Writing ${filename}...`)
       await write(filename, contents)
       logger.info('Configuration is created successfully', modulename)
     }
@@ -51,18 +55,19 @@ async function generateConfigFile(modulename: ModuleName, filename: string, cont
   }
 }
 
-async function configExists(modulename: ModuleName, cosmiconfigOpt: Options): Promise<boolean> {
+async function configExists(
+  modulename: ModuleName,
+  cosmiconfigOpt: Options
+): Promise<boolean> {
   const explorer = cosmiconfig(modulename, cosmiconfigOpt)
 
-  const file = await explorer.search().catch((err) => {
+  const file = await explorer.search().catch(err => {
     return Promise.reject(err)
   })
 
   if (!file) return Promise.resolve(true)
   logger.log('')
-  logger.warn(
-    `${modulename}: Configuration already exists in ${file.filepath} !`
-  )
+  logger.warn(`${modulename}: Configuration already exists in ${file.filepath} !`)
 
   return Promise.resolve(false)
 }
@@ -108,7 +113,7 @@ insert_final_newline = true
     logger.log(`No edits needed in ${filename}`)
     return
   }
-  logger.log(`Writing ${filename}`);
+  logger.log(`Writing ${filename}`)
   await write(filename, config)
   logger.info('Configuration is created successfully', 'editorconfig')
 }
@@ -130,7 +135,6 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
   if (modules.includes('eslint')) {
     extension = {
       scripts: {
-        //@ts-ignore
         'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
         ...extension.scripts,
       },
@@ -233,11 +237,9 @@ export default async function init(args: DoohickeyArgs) {
   const all = Object.keys(args).length === 1
   logger.log('')
 
-  const toDeal = modules.filter(
-    (module) => args[module[0]] || args[module] || all
-  )
+  const toDeal = modules.filter(module => args[module[0]] || args[module] || all)
   try {
-    await Promise.all(toDeal.map((module) => deal(module, toDeal)))
+    await Promise.all(toDeal.map(module => deal(module, toDeal)))
 
     if (args.k || args.husky || all) {
       await initHusky(toDeal)
@@ -245,7 +247,7 @@ export default async function init(args: DoohickeyArgs) {
     }
 
     if (toDeal.length > 0) {
-      let flags = ['--ignore-scripts']
+      const flags = ['--ignore-scripts']
       if (!isYarnUsed) {
         flags.unshift('install')
       }
