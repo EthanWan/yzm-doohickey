@@ -1,14 +1,15 @@
 import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
 import type { Options } from 'cosmiconfig'
-import type { DoohickeyArgs } from '../bin/doohickey'
+import yargsParser = require('yargs-parser')
 import {
   extendPackage,
-  runSpawn as run,
   logger,
   isYarnUsed,
+  runSpawn as run,
   getNodePkgManagerCommand as getNPMCommand,
 } from './util.js'
+import type { ExtendPkgObj } from './util.js'
 
 export type ModuleName = 'eslint' | 'prettier' | 'stylelint' | 'lint-staged' | 'husky'
 
@@ -127,7 +128,7 @@ async function generateStyleLintConfig(module: ModuleName) {
 }
 
 async function extendLintStagedPackage(modules: Array<ModuleName>) {
-  let extension = {
+  let extension: Partial<ExtendPkgObj> = {
     scripts: {
       'lint-staged': 'lint-staged',
     },
@@ -154,7 +155,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
 
   if (modules.includes('prettier')) {
     extension['lint-staged'] = {
-      '**/*.{js,jsx,tsx,ts,less,md,json}': ['prettier --write'],
+      '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
       ...(extension['lint-staged'] ?? {}),
     }
   }
@@ -221,7 +222,7 @@ async function deal(module: ModuleName, modules: Array<ModuleName>): Promise<voi
   }
 }
 
-export default async function init(args: DoohickeyArgs) {
+export default async function init(args: yargsParser.Arguments) {
   // Check if is a npm project
   try {
     await access('./package.json')

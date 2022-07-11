@@ -19,10 +19,10 @@ module.exports = {
 
   // Overrides let you have different configuration for
   // certain file extensions, folders and specific files.
-  overrides: [
-    {
-      files: '**/*.js',
-      options: { parser: 'json' },
-    },
-  ],
+  // overrides: [
+  //   {
+  //     files: '**/*.json',
+  //     options: { parser: 'json' },
+  //   },
+  // ],
 }

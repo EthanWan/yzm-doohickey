@@ -3,6 +3,7 @@
 .vscode
 yarn.lock
 yarn-error.log
+.eslintcache
 node_modules
 dist
 
