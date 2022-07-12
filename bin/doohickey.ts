@@ -11,9 +11,10 @@ if (args.v || args.version) {
 }
 
 const nodeMajorVersion = Number(process.version.slice(1).split('.')[0])
-if (nodeMajorVersion < 12) {
+// eslint-plugin-unicorn 14.18
+if (nodeMajorVersion < 14) {
   throw new Error(
-    `doohickey requires node.js 12.x or up. You are currently running
+    `doohickey requires node.js 14.x or up. You are currently running
       ${process.version}. Please upgrade to a safe, secure version of nodejs!`
   )
 }

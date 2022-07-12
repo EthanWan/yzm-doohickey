@@ -1,5 +1,5 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 import * as fg from 'fast-glob'
 import tsEslintConfig from './tsEslintConfig'
 
@@ -28,14 +28,18 @@ const isDirExists = path => {
 }
 
 const isJsMoreTs = async (path = 'src') => {
-  let srcEnter = `${path}/src`
-  // Nextjs main enter
-  if (await isDirExists(`${path}/pages`)) {
-    srcEnter = `${path}/pages`
+  let sourceEnter = path
+
+  if (isDirExists(`${path}/src`)) {
+    // Common src path
+    sourceEnter = `${path}/src`
+  } else if (await isDirExists(`${path}/pages`)) {
+    // Nextjs main enter
+    sourceEnter = `${path}/pages`
   }
 
-  const jsFiles = await fg(`${srcEnter}/**/*.{js,jsx}`, { deep: 3 })
-  const tsFiles = await fg(`${srcEnter}/**/*.{ts,tsx}`, { deep: 3 })
+  const jsFiles = await fg(`${sourceEnter}/**/*.{js,jsx}`, { deep: 3 })
+  const tsFiles = await fg(`${sourceEnter}/**/*.{ts,tsx}`, { deep: 3 })
 
   return jsFiles.length >= tsFiles.length
 }
@@ -48,15 +52,20 @@ if (isTsProject) {
       if (!jsMoreTs) return
       console.log('Remove tsconfig.json if it’s not a TypeScript project')
     })
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.log(error)
   }
 }
 
-export default {
-  extends: ['google', 'plugin:prettier/recommended', 'plugin:react/recommended'],
+module.exports = {
+  extends: [
+    'google',
+    'eslint:recommended',
+    'plugin:prettier/recommended',
+    'plugin:react/recommended',
+  ],
   parser: '@babel/eslint-parser',
-  plugins: ['react', 'react-hooks', 'import'],
+  plugins: ['react', 'unicorn', 'react-hooks', 'import'],
   env: {
     browser: true,
     node: true,
@@ -96,6 +105,9 @@ export default {
     'import/no-amd': 'error',
     'import/no-webpack-loader-syntax': 'error',
     'import/order': 'warn',
+
+    // unicorn
+    // 'unicorn/prevent-abbreviations': 'off',
   },
   // Shared Settings
   settings: {
@@ -113,6 +125,9 @@ export default {
     'import/extensions': ['.js', '.mjs', '.jsx', '.ts', '.tsx', '.d.ts'],
     'import/external-module-folders': ['node_modules', 'node_modules/@types'],
     polyfills: ['fetch', 'Promise', 'URL', 'object-assign'],
+    // react: {
+    //   version: '0.0.0',
+    // },
   },
   overrides: isTsProject
     ? [

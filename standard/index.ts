@@ -1,6 +1,7 @@
-import eslint from './eslint'
-import stylelint from './stylelint'
-import prettier from './prettier'
+/* eslint-disable */
+const eslint = require('./eslint')
+const stylelint = require('./stylelint')
+const prettier = require('./prettier')
 
 module.exports = {
   stylelint,

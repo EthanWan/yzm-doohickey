@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   extends: [
     // https://github.com/stylelint/stylelint-config-standard
     // Including: The Idiomatic CSS Principles, Google's CSS Style Guide,
