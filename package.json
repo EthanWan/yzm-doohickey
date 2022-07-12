@@ -25,7 +25,9 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "lint": "eslint --cache --ext .js,.ts **/*.js",
-    "prettier": "prettier --write \"**/*\""
+    "prettier": "prettier --write \"**/*\"",
+    "test": "jest /test",
+    "coverage": "jest /test --coverage"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
@@ -57,8 +59,10 @@
     "yargs-parser": "^21.0.1"
   },
   "devDependencies": {
+    "@types/jest": "^28.1.4",
     "@types/node": "^18.0.3",
     "jest": "^28.1.2",
+    "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"
   },
   "license": "MIT"
