@@ -1,6 +1,6 @@
 //  Google's TypeScript style guide
 
-module.exports = {
+export default {
   '@typescript-eslint/no-non-null-assertion': 'off',
   '@typescript-eslint/no-use-before-define': 'off',
   '@typescript-eslint/no-warning-comments': 'off',

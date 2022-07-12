@@ -1,6 +1,6 @@
 // https://prettier.io/docs/en/options.html
 
-module.exports = {
+export default {
   // Specify the line length that the printer will wrap on.
   printWidth: 90,
 
