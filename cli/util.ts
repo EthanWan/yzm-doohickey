@@ -136,7 +136,7 @@ export async function runSpawn(cmd: string, args: ReadonlyArray<string>): Promis
       if (code === 0) {
         resolve()
       } else {
-        reject('Something Wrong!')
+        reject(new Error('Something Wrong!'))
       }
     })
   })

@@ -20,39 +20,35 @@ async function generateConfigFile(
   filename: string,
   contents: string
 ): Promise<void> {
-  try {
-    const existing = await configExists(
-      modulename,
-      modulename === 'prettier'
-        ? {
-            searchPlaces: [
-              'package.json',
-              '.prettierrc',
-              '.prettierrc.json',
-              '.prettierrc.yaml',
-              '.prettierrc.yml',
-              '.prettierrc.json5',
-              '.prettierrc.js',
-              '.prettierrc.cjs',
-              'prettier.config.js',
-              'prettier.config.cjs',
-              '.prettierrc.toml',
-            ],
-            loaders: {
-              '.toml': () => 'toml',
-              '.json5': () => 'json5',
-            },
-          }
-        : {}
-    )
+  const existing = await configExists(
+    modulename,
+    modulename === 'prettier'
+      ? {
+          searchPlaces: [
+            'package.json',
+            '.prettierrc',
+            '.prettierrc.json',
+            '.prettierrc.yaml',
+            '.prettierrc.yml',
+            '.prettierrc.json5',
+            '.prettierrc.js',
+            '.prettierrc.cjs',
+            'prettier.config.js',
+            'prettier.config.cjs',
+            '.prettierrc.toml',
+          ],
+          loaders: {
+            '.toml': () => 'toml',
+            '.json5': () => 'json5',
+          },
+        }
+      : {}
+  )
 
-    if (existing) {
-      logger.log(`Writing ${filename}...`)
-      await write(filename, contents)
-      logger.info('Configuration is created successfully', modulename)
-    }
-  } catch (err) {
-    throw err
+  if (existing) {
+    logger.log(`Writing ${filename}...`)
+    await write(filename, contents)
+    logger.info('Configuration is created successfully', modulename)
   }
 }
 

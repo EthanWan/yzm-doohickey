@@ -1,46 +1,35 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
+import * as fs from 'fs'
+import * as path from 'path'
 import * as fg from 'fast-glob'
 import tsEslintConfig from './tsEslintConfig'
-
-const parserOptions = {
-  ecmaFeatures: {
-    jsx: true,
-  },
-  babelOptions: {
-    presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-    plugins: [
-      ['@babel/plugin-proposal-decorators', { legacy: true }],
-      ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ],
-  },
-  requireConfigFile: false,
-  project: './tsconfig.json',
-}
 
 const isDirExists = path => {
   return new Promise(resolve => {
     fs.stat(path, (error, stats) => {
       if (error) return resolve(false)
-      return resolve(stats.isDirectory())
+      return resolve(stats ? stats.isDirectory() : false)
     })
   })
 }
 
-const isJsMoreTs = async (path = 'src') => {
+const isJsMoreTs = async path => {
   let sourceEnter = path
 
-  if (isDirExists(`${path}/src`)) {
+  if (await isDirExists(`${path}/src`)) {
     // Common src path
     sourceEnter = `${path}/src`
   } else if (await isDirExists(`${path}/pages`)) {
     // Nextjs main enter
     sourceEnter = `${path}/pages`
   }
-
-  const jsFiles = await fg(`${sourceEnter}/**/*.{js,jsx}`, { deep: 3 })
-  const tsFiles = await fg(`${sourceEnter}/**/*.{ts,tsx}`, { deep: 3 })
-
+  const jsFiles = await fg(`${sourceEnter}/**/*.{js,jsx}`, {
+    deep: 3,
+    ignore: ['**/node_modules/**/'],
+  })
+  const tsFiles = await fg(`${sourceEnter}/**/*.{ts,tsx}`, {
+    deep: 3,
+    ignore: ['**/node_modules/**'],
+  })
   return jsFiles.length >= tsFiles.length
 }
 
@@ -55,6 +44,21 @@ if (isTsProject) {
   } catch (error) {
     console.log(error)
   }
+}
+
+const parserOptions = {
+  ecmaFeatures: {
+    jsx: true,
+  },
+  babelOptions: {
+    presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+    plugins: [
+      ['@babel/plugin-proposal-decorators', { legacy: true }],
+      ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ],
+  },
+  requireConfigFile: false,
+  project: './tsconfig.json',
 }
 
 module.exports = {
@@ -78,6 +82,8 @@ module.exports = {
     strict: ['error', 'never'],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'require-jsdoc': 'off',
+    'guard-for-in': 'off',
 
     'react/display-name': 0,
     'react/jsx-props-no-spreading': 0,

@@ -25,7 +25,8 @@
   "include": [
     "bin/*.ts",
     "cli/*.ts",
-    "standard/*.ts"
+    "standard/*.ts",
+    "test/*.ts"
   ],
   "exclude": [
     "node_modules"
