@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 import * as yargs from 'yargs-parser'
 import yargsParser = require('yargs-parser')
+import * as semver from 'semver'
 import init from '../cli/init.js'
 
 const args: yargsParser.Arguments = yargs(process.argv.slice(2))
+const nodeVersion = require('../package').version
 
 if (args.v || args.version) {
-  console.log(require('../package').version)
+  console.log(nodeVersion)
   process.exit(0)
 }
 
-const nodeMajorVersion = Number(process.version.slice(1).split('.')[0])
-// eslint-plugin-unicorn 14.18
-if (nodeMajorVersion < 14) {
+if (semver.lt(nodeVersion, '14.18.0')) {
   throw new Error(
-    `doohickey requires node.js 14.x or up. You are currently running
+    `doohickey requires node.js 14.18.x or up. You are currently running
       ${process.version}. Please upgrade to a safe, secure version of nodejs!`
   )
 }

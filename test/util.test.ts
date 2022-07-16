@@ -12,17 +12,25 @@ function makeFakeFsExistsSync(expected: PathLike[]): (path: PathLike) => boolean
 }
 
 describe('util test', () => {
-  it("isYarnUsed returns true if there's yarn.lock file only", () => {
+  // test('run returns rejects by npm add', async () => {
+  //   await expect(run('npm', ['add'])).rejects.toBe('Something Wrong!')
+  // })
+
+  // test('run returns resolves by npm install', async () => {
+  //   await expect(run('npm', ['install'])).resolves.toBe('')
+  // })
+
+  test("isYarnUsed returns true if there's yarn.lock file only", () => {
     const existsSync = makeFakeFsExistsSync(['yarn.lock'])
     expect(isYarnUsed(existsSync)).toBe(true)
   })
 
-  it("isYarnUsed returns false if there's package-lock.json file only", () => {
+  test("isYarnUsed returns false if there's package-lock.json file only", () => {
     const existsSync = makeFakeFsExistsSync(['package-lock.json'])
     expect(isYarnUsed(existsSync)).toBe(false)
   })
 
-  it("isYarnUsed returns false if there're yarn.lock and package-lock.json files", () => {
+  test("isYarnUsed returns false if there're yarn.lock and package-lock.json files", () => {
     const existsSync = makeFakeFsExistsSync(['package-lock.json', 'yarn.lock'])
     expect(isYarnUsed(existsSync)).toBe(false)
   })
@@ -35,7 +43,7 @@ describe('util test', () => {
     expect(getNPMCommand()).toBe(getNPMCommand(false))
   })
 
-  it('getPkgManagerCommand returns yarn', () => {
+  test('getPkgManagerCommand returns yarn', () => {
     expect(getNPMCommand(true)).toBe(yarnCmd)
   })
 })
