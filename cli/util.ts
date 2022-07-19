@@ -1,8 +1,9 @@
 import { writeFile as write, readFile as read } from 'fs/promises'
-import { existsSync as exist } from 'fs'
+import { existsSync } from 'fs'
 import { spawn } from 'child_process'
 import chalk = require('chalk')
 import stripAnsi from 'strip-ansi'
+import { PackageJson } from '@npm/types'
 
 export type LoggerFunction = (msg: string, title?: string | null) => void
 
@@ -14,20 +15,11 @@ export interface Logger {
   error: LoggerFunction
 }
 
-export interface ExtendPkgObj {
-  scripts: {
-    [key: string]: string
-  }
-  'lint-staged': {
-    [key: string]: string
-  }
-  dependencies: {
-    [key: string]: string
-  }
-  devDependencies: {
-    [key: string]: string
-  }
+interface LintstagedPkgConfig {
+  'lint-staged': {}
 }
+
+export type PackageJsonWithLintstaged = LintstagedPkgConfig | PackageJson
 
 // ====== Logger Start ====== //
 
@@ -93,7 +85,7 @@ export const logger: Logger = {
 
 // ====== Logger End ====== //
 
-export function isYarnUsed(existsSync = exist) {
+export function isYarnUsed() {
   if (existsSync('package-lock.json')) {
     return false
   }
@@ -109,7 +101,9 @@ export async function readJson(jsonPath: string): Promise<string> {
   return JSON.parse(contents)
 }
 
-export async function extendPackage(fields: Partial<ExtendPkgObj>): Promise<void> {
+export async function extendPackage(
+  fields: Partial<PackageJsonWithLintstaged>
+): Promise<void> {
   const pkg = await readJson('./package.json')
   const toMerge = fields
 
@@ -123,6 +117,7 @@ export async function extendPackage(fields: Partial<ExtendPkgObj>): Promise<void
       pkg[key] = value
     }
   }
+
   return write('./package.json', JSON.stringify(pkg, null, 2))
 }
 

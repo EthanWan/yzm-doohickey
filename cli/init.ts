@@ -2,6 +2,7 @@ import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
 import type { Options } from 'cosmiconfig'
 import yargsParser = require('yargs-parser')
+import type { PackageJsonWithLintstaged } from './util.js'
 import {
   extendPackage,
   logger,
@@ -9,7 +10,6 @@ import {
   runSpawn as run,
   getNodePkgManagerCommand as getNPMCommand,
 } from './util.js'
-import type { ExtendPkgObj } from './util.js'
 
 export type ModuleName = 'eslint' | 'prettier' | 'stylelint' | 'lint-staged' | 'husky'
 
@@ -124,7 +124,7 @@ async function generateStyleLintConfig(module: ModuleName) {
 }
 
 async function extendLintStagedPackage(modules: Array<ModuleName>) {
-  let extension: Partial<ExtendPkgObj> = {
+  let extension: Partial<PackageJsonWithLintstaged> = {
     scripts: {
       'lint-staged': 'lint-staged',
     },
