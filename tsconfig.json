@@ -8,7 +8,7 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2020"],
-    "module": "CommonJS",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
@@ -26,7 +26,7 @@
     "bin/*.ts",
     "cli/*.ts",
     "standard/*.ts",
-    "test/*.ts"
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules"

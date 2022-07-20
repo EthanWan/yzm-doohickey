@@ -1,6 +1,6 @@
-import * as fs from 'fs'
-// import type { MockFS } from './__mocks__/fs'
 import { spawn } from 'child_process'
+// @ts-ignore
+import { __setMockFiles, __clearMockFiles } from 'fs'
 import {
   // extendPackage,
   // logger,
@@ -10,11 +10,15 @@ import {
 } from '../cli/util'
 
 jest.mock('child_process')
-jest.mock('fs');
+jest.mock('fs')
 
 describe('util test', () => {
+  afterEach(() => {
+    __clearMockFiles()
+  })
+
   test('run returns rejects by incorrect command', async () => {
-    (spawn as jest.Mock).mockReturnValue({
+    ;(spawn as jest.Mock).mockReturnValue({
       on: (_, cb) => {
         cb(1)
       },
@@ -24,7 +28,7 @@ describe('util test', () => {
   })
 
   test('run returns resolves by correct command', async () => {
-    (spawn as jest.Mock).mockReturnValue({
+    ;(spawn as jest.Mock).mockReturnValue({
       on: (_, cb) => {
         cb(0)
       },
@@ -34,26 +38,23 @@ describe('util test', () => {
   })
 
   test("isYarnUsed returns true if there's yarn.lock file only", () => {
-    // @ts-ignore
-    fs.__setMockFiles({
-      'yarn.lock': ''
+    __setMockFiles({
+      'yarn.lock': '',
     })
     expect(isYarnUsed()).toBe(true)
   })
 
   test("isYarnUsed returns false if there's package-lock.json file only", () => {
-     // @ts-ignore
-    fs.__setMockFiles({
-      'package-lock.json': ''
+    __setMockFiles({
+      'package-lock.json': '',
     })
     expect(isYarnUsed()).toBe(false)
   })
 
   test("isYarnUsed returns false if there're yarn.lock and package-lock.json files", () => {
-     // @ts-ignore
-    fs.__setMockFiles({
+    __setMockFiles({
       'yarn.json': '',
-      'package-lock.json': ''
+      'package-lock.json': '',
     })
     expect(isYarnUsed()).toBe(false)
   })
