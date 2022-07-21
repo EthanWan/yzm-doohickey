@@ -2,6 +2,7 @@ import * as path from 'path'
 import { PathLike } from 'fs'
 import { OpenMode, PathOrFileDescriptor } from 'node:fs'
 import { Abortable } from 'node:events'
+import { MockFiles, File } from './index'
 
 export interface MockFSPromises {
   writeFile: (
@@ -20,15 +21,6 @@ export interface MockFSPromises {
 }
 
 const fsp = jest.createMockFromModule<MockFSPromises>('fs/promises')
-
-type File = {
-  file: string
-  content: string
-}
-
-interface MockFiles {
-  [key: string]: File[]
-}
 
 let mockFiles: MockFiles = Object.create(null)
 

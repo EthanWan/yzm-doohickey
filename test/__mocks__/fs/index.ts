@@ -9,6 +9,15 @@ export interface MockFS {
 
 const fs = jest.createMockFromModule<MockFS>('fs')
 
+export type File = {
+  file: string
+  content: string
+}
+
+export interface MockFiles {
+  [key: string]: File[]
+}
+
 let mockFiles = Object.create(null)
 
 // /**
