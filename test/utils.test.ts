@@ -1,9 +1,10 @@
 import { spawn } from 'child_process'
-// @ts-ignore
-import { __setMockFiles, __clearMockFiles } from 'fs'
+import * as fs from 'fs'
+import * as fsp from 'fs/promises'
 import {
-  // extendPackage,
+  extendPackage,
   // logger,
+  readJson,
   isYarnUsed,
   runSpawn as run,
   getNodePkgManagerCommand as getNPMCommand,
@@ -11,13 +12,45 @@ import {
 
 jest.mock('child_process')
 jest.mock('fs')
+jest.mock('fs/promises')
+
+// @ts-ignore
+const { __clearMockFiles, __setMockFiles } = fs
+// @ts-ignore
+const { writeFile, readFile, __clearMockFilesp, __setMockFilesp } = fsp
 
 describe('util test', () => {
   afterEach(() => {
     __clearMockFiles()
+    __clearMockFilesp()
   })
 
-  test('run returns rejects by incorrect command', async () => {
+  test('extendPackage returns resolve if content is right', async () => {
+    __setMockFilesp({
+      'package.json': '{"scripts":{"dev":"node index.js"}}',
+    })
+
+    await expect(
+      extendPackage({
+        scripts: {
+          build: 'node index.js',
+        },
+      })
+    ).resolves.toBe(`{
+  "scripts": {
+    "dev": "node index.js",
+    "build": "node index.js"
+  }
+}`)
+
+    expect(readFile).toHaveBeenCalled()
+    expect(readFile).toHaveBeenCalledTimes(1)
+
+    expect(writeFile).toHaveBeenCalled()
+    expect(writeFile).toHaveBeenCalledTimes(1)
+  })
+
+  test('runSpawn returns rejects by incorrect command', async () => {
     ;(spawn as jest.Mock).mockReturnValue({
       on: (_, cb) => {
         cb(1)
@@ -27,7 +60,7 @@ describe('util test', () => {
     await expect(run('npm', ['add'])).rejects.toStrictEqual(new Error('Something Wrong!'))
   })
 
-  test('run returns resolves by correct command', async () => {
+  test('runSpawn returns resolves by correct command', async () => {
     ;(spawn as jest.Mock).mockReturnValue({
       on: (_, cb) => {
         cb(0)

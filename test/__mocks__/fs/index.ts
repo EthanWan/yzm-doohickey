@@ -3,12 +3,30 @@ import { PathLike } from 'fs'
 
 export interface MockFS {
   __setMockFiles: (files: { [key: string]: string }) => void
+  __clearMockFiles: () => void
   existsSync: (path: PathLike) => boolean
 }
 
 const fs = jest.createMockFromModule<MockFS>('fs')
 
 let mockFiles = Object.create(null)
+
+// /**
+//  * Get mock files
+//  * @return {Object} mockFiles
+//  */
+// export function __getMockFiles() {
+//   return mockFiles
+// }
+
+/**
+ * Clear mock files
+ */
+export function __clearMockFiles() {
+  mockFiles = {
+    '.': [],
+  }
+}
 
 /**
  * Mock file system
@@ -21,31 +39,26 @@ export function __setMockFiles(newMockFiles) {
     if (!mockFiles[dir]) {
       mockFiles[dir] = []
     }
-    mockFiles[dir].push(path.basename(file))
-  }
-}
 
-/**
- * Clear mock files
- */
-
-export function __clearMockFiles() {
-  mockFiles = {
-    '.': [],
+    mockFiles[dir].push({
+      file: path.basename(file),
+      content: newMockFiles[file],
+    })
   }
 }
 
 /**
  * Mock existsSync
- * @param {string} filePath
+ * @param {PathLike} filePath
  * @return {boolean}
  */
-export function existsSync(filePath) {
+export const existsSync = jest.fn(filePath => {
   const dir = path.dirname(filePath)
   const file = path.basename(filePath)
 
-  return mockFiles[dir].includes(file)
-}
+  return mockFiles[dir].some(item => item.file === file)
+})
 
 fs.__setMockFiles = __setMockFiles
+fs.__clearMockFiles = __clearMockFiles
 fs.existsSync = existsSync
