@@ -23,7 +23,7 @@ export type PackageJsonWithLintstaged = LintstagedPkgConfig | PackageJson
 
 // ====== Logger Start ====== //
 
-const format = (label: string, msg: string) => {
+export const format = (label: string, msg: string) => {
   return msg
     .split('\n')
     .map((line, i) => {
@@ -55,7 +55,7 @@ function done(msg, title) {
 }
 
 function warn(msg, title) {
-  console.log(
+  console.warn(
     format(
       chalk.bgYellow.black(title ? ` ${title.toUpperCase()} ` : ' WARN ') + '',
       chalk.yellow(msg)

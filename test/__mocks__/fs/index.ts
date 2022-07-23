@@ -65,7 +65,7 @@ export const existsSync = jest.fn(filePath => {
   const dir = path.dirname(filePath)
   const file = path.basename(filePath)
 
-  return mockFiles[dir].some(item => item.file === file)
+  return (mockFiles[dir] || []).some(item => item.file === file)
 })
 
 fs.__setMockFiles = __setMockFiles

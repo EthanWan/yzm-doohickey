@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as fsp from 'fs/promises'
 import {
   extendPackage,
-  // logger,
+  logger,
   readJson,
   isYarnUsed,
   runSpawn as run,
@@ -23,6 +23,48 @@ describe('util test', () => {
   afterEach(() => {
     __clearMockFiles()
     __clearMockFilesp()
+
+    jest.restoreAllMocks()
+  })
+
+  // test('xxx', () => {
+  //   type a = {
+  //     format: (label: string, msg: string) => string
+  //   }
+  //   const util = jest.genMockFromModule<a>('../cli/util')
+  //   ;(util.format = (label: string, msg: string) => {
+  //     return label + msg
+  //   }),
+  //     expect(logger.warn('hello')).toBeUndefined
+  //   expect(util.format).toReturn
+  // })
+
+  test('logger to be called ', () => {
+    jest.spyOn(global.console, 'log')
+    logger.log('')
+    logger.info('')
+    logger.done('')
+    expect(console.log).toBeCalled()
+    expect(console.log).toBeCalledTimes(3)
+
+    jest.spyOn(global.console, 'warn')
+    logger.warn('')
+    expect(console.warn).toBeCalled()
+    expect(console.warn).toBeCalledTimes(1)
+    // expect(console.warn).
+
+    jest.spyOn(global.console, 'error')
+    logger.error('')
+    expect(console.error).toBeCalled()
+    expect(console.error).toBeCalledTimes(1)
+  })
+
+  test('readJson returns rejects if file is not exist', async () => {
+    await expect(readJson('package.json')).rejects.toStrictEqual(
+      new Error('file is not exist')
+    )
+    expect(readFile).toHaveBeenCalled()
+    expect(readFile).toHaveBeenCalledTimes(1)
   })
 
   test('extendPackage returns resolve if content is right', async () => {
@@ -42,9 +84,6 @@ describe('util test', () => {
     "build": "node index.js"
   }
 }`)
-
-    expect(readFile).toHaveBeenCalled()
-    expect(readFile).toHaveBeenCalledTimes(1)
 
     expect(writeFile).toHaveBeenCalled()
     expect(writeFile).toHaveBeenCalledTimes(1)
@@ -86,8 +125,8 @@ describe('util test', () => {
 
   test("isYarnUsed returns false if there're yarn.lock and package-lock.json files", () => {
     __setMockFiles({
-      'yarn.json': '',
       'package-lock.json': '',
+      'yarn.json': '',
     })
     expect(isYarnUsed()).toBe(false)
   })
@@ -100,7 +139,7 @@ describe('util test', () => {
     expect(getNPMCommand()).toBe(getNPMCommand(false))
   })
 
-  test('getPkgManagerCommand returns yarn', () => {
+  test('getNodePkgManagerCommand returns yarn', () => {
     expect(getNPMCommand(true)).toBe(yarnCmd)
   })
 })

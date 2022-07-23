@@ -82,7 +82,6 @@ export const writeFile = jest.fn((filePath, content) => {
  * @return {Promise.void}
  */
 export const readFile = jest.fn((filePath, options) => {
-  console.log(options)
   const file = getFileByMockFS(filePath)
 
   if (file) {
@@ -99,7 +98,7 @@ export const readFile = jest.fn((filePath, options) => {
 function getFileByMockFS(filePath: string): File | undefined {
   const dir = path.dirname(filePath)
   const file = path.basename(filePath)
-  const f = mockFiles[dir].filter(item => item.file === file)
+  const f = (mockFiles[dir] || []).filter(item => item.file === file)
   if (f.length > 0) {
     return f[0]
   }
