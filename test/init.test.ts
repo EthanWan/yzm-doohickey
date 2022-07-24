@@ -1,9 +1,17 @@
 import * as fsp from 'fs/promises'
 import yargsParser = require('yargs-parser')
+import { cosmiconfig } from 'cosmiconfig'
 import init from '../cli/init'
+import { runSpawn, logger } from '../cli/util'
 
-jest.mock('child_process')
-jest.mock('fs')
+jest.mock('cosmiconfig', () => ({
+  cosmiconfig: jest.fn(),
+}))
+
+jest.mock('../cli/util', () => ({
+  runSpawn: jest.fn(),
+}))
+
 jest.mock('fs/promises')
 
 // @ts-ignore
@@ -40,8 +48,21 @@ describe('init test', () => {
       'package.json': '{}',
       '.editorconfig': '',
     })
+    ;(cosmiconfig as jest.Mock).mockReturnValue({
+      search: () => {
+        return Promise.resolve(undefined)
+      },
+    })
+    ;(runSpawn as jest.Mock).mockResolvedValue(true)
+
+    jest.spyOn(logger, 'log')
+
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
+    expect(cosmiconfig).toHaveBeenCalled()
+    expect(runSpawn).toHaveBeenCalled()
+    expect(logger.log).toHaveBeenCalled()
+
     expect(__getMockFilesp()).toBe({
       '.': [''],
     })

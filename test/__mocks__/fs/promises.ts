@@ -8,7 +8,7 @@ export interface MockFSPromises {
   writeFile: (
     path: PathOrFileDescriptor,
     content: string | NodeJS.ArrayBufferView
-  ) => void
+  ) => Promise<string | Error>
   readFile: (
     path: PathLike,
     options?:
@@ -78,15 +78,25 @@ export function __getMockFilesp() {
 export const writeFile = jest.fn((filePath, content) => {
   const file = getFileByMockFS(filePath)
 
-  if (file) {
-    file.content = content
+  try {
+    if (file) {
+      file.content = content
+    } else {
+      const dir = path.dirname(filePath)
+      const file = path.basename(filePath)
+      ;(mockFiles[dir] || []).push({
+        file,
+        content: content as string,
+      })
+    }
     return Promise.resolve(content)
+  } catch (err) {
+    return Promise.reject(new Error(err))
   }
-  return Promise.reject(new Error('file is not exist'))
 })
 
 /**
- *
+ * readFile
  * @param {PathOrFileDescriptor} filePath
  * @return {Promise.void}
  */
@@ -105,16 +115,26 @@ export const readFile = jest.fn((filePath, options) => {
 })
 
 /**
- *
+ * access
  * @param {PathOrFileDescriptor} filePath
  * @return {Promise.void}
  */
 export const access = jest.fn(filePath => {
+  const dir = path.dirname(filePath)
+  mockFiles[dir]
+  if (Array.isArray(mockFiles[dir])) {
+    return Promise.resolve(true)
+  }
   const file = getFileByMockFS(filePath)
   if (file) {
     return Promise.resolve(true)
   }
-  return Promise.reject(new Error('file is not exist'))
+  const error: Error & { code?: string } = {
+    name: 'error',
+    code: 'ENOENT',
+    message: 'file or directory is not exist',
+  }
+  return Promise.reject(error)
 })
 
 /**

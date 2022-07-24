@@ -20,6 +20,7 @@ async function generateConfigFile(
   filename: string,
   contents: string
 ): Promise<void> {
+  console.log('=======222=')
   const existing = await configExists(
     modulename,
     modulename === 'prettier'
@@ -44,7 +45,6 @@ async function generateConfigFile(
         }
       : {}
   )
-
   if (existing) {
     logger.log(`Writing ${filename}...`)
     await write(filename, contents)
@@ -73,7 +73,7 @@ async function generateESLintConfig(module: ModuleName): Promise<void> {
   const config = `module.exports = {
     extends: [require.resolve('yzm-doohickey/standard/eslint')]
 }`
-  return generateConfigFile(module, './.eslintrc.js', config)
+  return generateConfigFile(module, '.eslintrc.js', config)
 }
 
 async function generatePrettierConfig(module: ModuleName): Promise<void> {
@@ -245,7 +245,7 @@ export default async function init(args: yargsParser.Arguments) {
 
     if (toDeal.length > 0) {
       const flags = ['--ignore-scripts']
-      if (!isYarnUsed) {
+      if (!isYarnUsed()) {
         flags.unshift('install')
       }
       await run(getNPMCommand(), flags)
