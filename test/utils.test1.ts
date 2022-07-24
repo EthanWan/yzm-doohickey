@@ -88,11 +88,17 @@ describe('util test', () => {
         scripts: {
           build: 'node index.js',
         },
+        dependencies: {
+          react: '18.0.0',
+        },
       })
     ).resolves.toBe(`{
   "scripts": {
     "dev": "node index.js",
     "build": "node index.js"
+  },
+  "dependencies": {
+    "react": "18.0.0"
   }
 }`)
 

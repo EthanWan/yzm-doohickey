@@ -2,14 +2,14 @@ import { writeFile as write, readFile as read, access } from 'fs/promises'
 import { cosmiconfig } from 'cosmiconfig'
 import type { Options } from 'cosmiconfig'
 import yargsParser = require('yargs-parser')
-import type { PackageJsonWithLintstaged } from './util.js'
+import type { PackageJsonWithLintstaged } from './util'
 import {
   extendPackage,
   logger,
   isYarnUsed,
   runSpawn as run,
   getNodePkgManagerCommand as getNPMCommand,
-} from './util.js'
+} from './util'
 
 export type ModuleName = 'eslint' | 'prettier' | 'stylelint' | 'lint-staged' | 'husky'
 
@@ -96,7 +96,7 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 `
   let existing
-  const filename = './.editorconfig'
+  const filename = '.editorconfig'
   try {
     existing = await read(filename, 'utf8')
   } catch (err) {
@@ -224,7 +224,7 @@ export default async function init(args: yargsParser.Arguments) {
     await access('./package.json')
   } catch (err) {
     if (err.code !== 'ENOENT') {
-      throw new Error(`Unable to find package.json file: ${err.message}`)
+      logger.error(`Unable to find package.json file: ${err.message}`)
     }
     logger.log('Please run from a directory with your package.json.')
     return
