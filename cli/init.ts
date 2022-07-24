@@ -20,7 +20,6 @@ async function generateConfigFile(
   filename: string,
   contents: string
 ): Promise<void> {
-  console.log('=======222=')
   const existing = await configExists(
     modulename,
     modulename === 'prettier'

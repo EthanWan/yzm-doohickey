@@ -2,15 +2,22 @@ import * as fsp from 'fs/promises'
 import yargsParser = require('yargs-parser')
 import { cosmiconfig } from 'cosmiconfig'
 import init from '../cli/init'
-import { runSpawn, logger } from '../cli/util'
+import { runSpawn } from '../cli/util'
 
 jest.mock('cosmiconfig', () => ({
   cosmiconfig: jest.fn(),
 }))
 
-jest.mock('../cli/util', () => ({
-  runSpawn: jest.fn(),
-}))
+jest.mock('../cli/util', () => {
+  const originalModule = jest.requireActual('../cli/util')
+  return {
+    ...originalModule,
+    runSpawn: jest.fn(),
+    extendPackage: jest.fn(),
+    isYarnUsed: jest.fn(),
+    getNodePkgManagerCommand: jest.fn(),
+  }
+})
 
 jest.mock('fs/promises')
 
@@ -18,6 +25,13 @@ jest.mock('fs/promises')
 const { access, __clearMockFilesp, __setMockFilesp, __getMockFilesp } = fsp
 
 const args: yargsParser.Arguments = { _: [] }
+
+const fakeFiles = {
+  '.editorconfig': ``,
+  '.eslintrc.js': ``,
+  '.stylelintrc.js': '',
+  '.prettierrc.js': '',
+}
 
 describe('init test', () => {
   afterEach(() => {
@@ -55,13 +69,12 @@ describe('init test', () => {
     })
     ;(runSpawn as jest.Mock).mockResolvedValue(true)
 
-    jest.spyOn(logger, 'log')
+    // jest.spyOn(logger, 'log')
 
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
     expect(cosmiconfig).toHaveBeenCalled()
     expect(runSpawn).toHaveBeenCalled()
-    expect(logger.log).toHaveBeenCalled()
 
     expect(__getMockFilesp()).toBe({
       '.': [''],
