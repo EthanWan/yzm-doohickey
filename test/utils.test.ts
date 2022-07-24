@@ -2,6 +2,7 @@ import { spawn } from 'child_process'
 import * as fs from 'fs'
 import * as fsp from 'fs/promises'
 import {
+  format,
   extendPackage,
   logger,
   readJson,
@@ -27,16 +28,27 @@ describe('util test', () => {
     jest.restoreAllMocks()
   })
 
-  // test('xxx', () => {
-  //   type a = {
-  //     format: (label: string, msg: string) => string
-  //   }
-  //   const util = jest.genMockFromModule<a>('../cli/util')
-  //   ;(util.format = (label: string, msg: string) => {
-  //     return label + msg
-  //   }),
-  //     expect(logger.warn('hello')).toBeUndefined
-  //   expect(util.format).toReturn
+  test('format returns string with "\\n"', () => {
+    expect(format('INFO', 'hello\nevery body\nenjoy your life')).toBe(`INFO hello
+     every body
+     enjoy your life`)
+  })
+
+  test('format returns string without "\\n"', () => {
+    expect(format('hello', 'world')).toBe('hello world')
+  })
+
+  // test('logger.info have be called with corrent args', () => {
+  //   jest.spyOn(global.console, 'log')
+  //   jest.mock<{ bgBlue: { white: jest.Mock } }>('chalk', () => ({
+  //     bgBlue: {
+  //       white: jest.fn().mockReturnValueOnce('test-white'),
+  //     },
+  //   }))
+  //   logger.info('hello', 'info')
+
+  //   expect(chalk.bgBlue.white).toHaveBeenCalledWith(' INFO ')
+  //   expect(global.console.log).toHaveBeenCalledWith('test-white hello')
   // })
 
   test('logger to be called ', () => {
@@ -51,7 +63,6 @@ describe('util test', () => {
     logger.warn('')
     expect(console.warn).toBeCalled()
     expect(console.warn).toBeCalledTimes(1)
-    // expect(console.warn).
 
     jest.spyOn(global.console, 'error')
     logger.error('')
