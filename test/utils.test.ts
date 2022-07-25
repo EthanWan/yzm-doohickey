@@ -71,9 +71,7 @@ describe('util test', () => {
   })
 
   test('readJson returns rejects if file is not exist', async () => {
-    await expect(readJson('package.json')).rejects.toStrictEqual(
-      new Error('file is not exist')
-    )
+    await expect(readJson('package.json')).rejects
     expect(readFile).toHaveBeenCalled()
     expect(readFile).toHaveBeenCalledTimes(1)
   })

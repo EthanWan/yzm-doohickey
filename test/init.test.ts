@@ -27,10 +27,25 @@ const { access, __clearMockFilesp, __setMockFilesp, __getMockFilesp } = fsp
 const args: yargsParser.Arguments = { _: [] }
 
 const fakeFiles = {
-  '.editorconfig': ``,
-  '.eslintrc.js': ``,
-  '.stylelintrc.js': '',
-  '.prettierrc.js': '',
+  '.editorconfig': `root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+`,
+  '.eslintrc.js': `module.exports = {
+  extends: [require.resolve('yzm-doohickey/standard/eslint')]
+}`,
+  '.stylelintrc.js': `module.exports = {
+  extends: [require.resolve('yzm-doohickey/standard/stylelint')]
+}`,
+  '.prettierrc.js': `module.exports = {
+  ...require('yzm-doohickey/standard/prettier')
+}`,
 }
 
 describe('init test', () => {
@@ -57,10 +72,9 @@ describe('init test', () => {
     expect(access).toHaveBeenCalled()
   })
 
-  test('init 2', async () => {
+  test('init create all config file by "doohickey init -e -p -s -l -k"', async () => {
     __setMockFilesp({
       'package.json': '{}',
-      '.editorconfig': '',
     })
     ;(cosmiconfig as jest.Mock).mockReturnValue({
       search: () => {
@@ -69,15 +83,17 @@ describe('init test', () => {
     })
     ;(runSpawn as jest.Mock).mockResolvedValue(true)
 
-    // jest.spyOn(logger, 'log')
-
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
     expect(cosmiconfig).toHaveBeenCalled()
     expect(runSpawn).toHaveBeenCalled()
 
-    expect(__getMockFilesp()).toBe({
-      '.': [''],
+    const expectValue = Object.keys(fakeFiles).map(key => ({
+      file: key,
+      content: fakeFiles[key],
+    }))
+    expect(__getMockFilesp()).toEqual({
+      '.': [{ file: 'package.json', content: '{}' }, ...expectValue],
     })
   })
 })
