@@ -1,4 +1,5 @@
 import * as fsp from 'fs/promises'
+import * as path from 'path'
 import yargsParser = require('yargs-parser')
 import { cosmiconfig } from 'cosmiconfig'
 import init from '../cli/init'
@@ -18,6 +19,12 @@ jest.mock('../cli/util', () => {
     getNodePkgManagerCommand: jest.fn(),
   }
 })
+;(cosmiconfig as jest.Mock).mockReturnValue({
+  search: () => {
+    return Promise.resolve(undefined)
+  },
+})
+;(runSpawn as jest.Mock).mockResolvedValue(true)
 
 jest.mock('fs/promises')
 
@@ -48,6 +55,22 @@ insert_final_newline = true
 }`,
 }
 
+function setMockFiles(newMockFiles) {
+  const mockFiles = Object.create(null)
+  for (const file in newMockFiles) {
+    const dir = path.dirname(file)
+    if (!mockFiles[dir]) {
+      mockFiles[dir] = []
+    }
+
+    mockFiles[dir].push({
+      file: path.basename(file),
+      content: newMockFiles[file],
+    })
+  }
+  return mockFiles
+}
+
 describe('init test', () => {
   afterEach(() => {
     __clearMockFilesp()
@@ -76,24 +99,33 @@ describe('init test', () => {
     __setMockFilesp({
       'package.json': '{}',
     })
-    ;(cosmiconfig as jest.Mock).mockReturnValue({
-      search: () => {
-        return Promise.resolve(undefined)
-      },
-    })
-    ;(runSpawn as jest.Mock).mockResolvedValue(true)
 
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
     expect(cosmiconfig).toHaveBeenCalled()
     expect(runSpawn).toHaveBeenCalled()
 
-    const expectValue = Object.keys(fakeFiles).map(key => ({
-      file: key,
-      content: fakeFiles[key],
-    }))
-    expect(__getMockFilesp()).toEqual({
-      '.': [{ file: 'package.json', content: '{}' }, ...expectValue],
+    expect(__getMockFilesp()).toEqual(
+      setMockFiles({
+        'package.json': '{}',
+        ...fakeFiles,
+      })
+    )
+  })
+
+  test('init create all config file by "doohickey init -all"', async () => {
+    __setMockFilesp({
+      'package.json': '{}',
     })
+
+    args['all'] = true
+    await init(args)
+
+    expect(__getMockFilesp()).toEqual(
+      setMockFiles({
+        'package.json': '{}',
+        ...fakeFiles,
+      })
+    )
   })
 })

@@ -46,7 +46,7 @@ export function __clearMockFilesp() {
  * Mock file system
  * @param {Object} newMockFiles
  */
-export function __setMockFilesp(newMockFiles) {
+export function __setMockFilesp(newMockFiles: { [key: string]: string }) {
   mockFiles = Object.create(null)
   for (const file in newMockFiles) {
     const dir = path.dirname(file)
