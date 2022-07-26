@@ -72,34 +72,28 @@ function setMockFiles(newMockFiles) {
 }
 
 describe('init test', () => {
+  beforeEach(() => {
+    __setMockFilesp({
+      'package.json': '{}',
+    })
+  })
+
   afterEach(() => {
     __clearMockFilesp()
-
     jest.restoreAllMocks()
   })
 
-  test('init results rejects if package.json is not exist', async () => {
+  test('init results rejects if package.json dose not exist', async () => {
     expect(init(args)).rejects
   })
 
   test('init results logger.log if option does not exist', async () => {
-    __setMockFilesp({
-      'package.json': '',
-    })
-    await expect(
-      init({
-        ...args,
-        c: true,
-      })
-    ).toBeNull
+    args['c'] = true
+    await expect(init(args)).toBeNull
     expect(access).toHaveBeenCalled()
   })
 
-  test('init create all config file by "doohickey init -e -p -s -l -k"', async () => {
-    __setMockFilesp({
-      'package.json': '{}',
-    })
-
+  test('init create all config file by "doohickey init -e -p -s -l -k" or "doohickey init -epslk"', async () => {
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
     expect(cosmiconfig).toHaveBeenCalled()
@@ -113,11 +107,7 @@ describe('init test', () => {
     )
   })
 
-  test('init create all config file by "doohickey init -all"', async () => {
-    __setMockFilesp({
-      'package.json': '{}',
-    })
-
+  test('init generate all config file by "doohickey init"', async () => {
     args['all'] = true
     await init(args)
 
@@ -128,4 +118,27 @@ describe('init test', () => {
       })
     )
   })
+
+  test('init does not generate any files by "doohickey init" if files already exist', async () => {
+    const mockFiles = setMockFiles({
+      'package.json': '{}',
+    })
+
+    ;(cosmiconfig as jest.Mock).mockReturnValue({
+      search: () => {
+        return Promise.resolve(true)
+      },
+    })
+
+    await init(args)
+
+    expect(__getMockFilesp()).toEqual(mockFiles)
+  })
+
+  // test('init generate .eslintrc.js and extend package.json by "doohickey init -e"', async () => {
+  //   args['e'] = true
+  //   await init(args)
+
+  //   expect(__getMockFilesp()).toEqual()
+  // })
 })
