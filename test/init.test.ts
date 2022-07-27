@@ -14,7 +14,6 @@ jest.mock('../cli/util', () => {
   return {
     ...originalModule,
     runSpawn: jest.fn(),
-    extendPackage: jest.fn(),
     isYarnUsed: jest.fn(),
     getNodePkgManagerCommand: jest.fn(),
   }
@@ -29,9 +28,21 @@ jest.mock('../cli/util', () => {
 jest.mock('fs/promises')
 
 // @ts-ignore
-const { access, __clearMockFilesp, __setMockFilesp, __getMockFilesp } = fsp
+const { access, readFile, __clearMockFilesp, __setMockFilesp, __getMockFilesp } = fsp
 
 const args: yargsParser.Arguments = { _: [] }
+
+const fakePackeage = {
+  scripts: {
+    'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
+    'lint-staged': 'lint-staged',
+  },
+  'lint-staged': {
+    '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
+    '**/*.less': 'stylelint --syntax less',
+    '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js',
+  },
+}
 
 const fakeFiles = {
   '.editorconfig': `root = true
@@ -93,7 +104,7 @@ describe('init test', () => {
     expect(access).toHaveBeenCalled()
   })
 
-  test('init create all config file by "doohickey init -e -p -s -l -k" or "doohickey init -epslk"', async () => {
+  test('init create all config file and extend package.json by "doohickey init -e -p -s -l -k" or "doohickey init -epslk"', async () => {
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
     expect(cosmiconfig).toHaveBeenCalled()
@@ -101,27 +112,27 @@ describe('init test', () => {
 
     expect(__getMockFilesp()).toEqual(
       setMockFiles({
-        'package.json': '{}',
+        'package.json': JSON.stringify(fakePackeage, null, 2),
         ...fakeFiles,
       })
     )
   })
 
   test('init generate all config file by "doohickey init"', async () => {
-    args['all'] = true
     await init(args)
 
     expect(__getMockFilesp()).toEqual(
       setMockFiles({
-        'package.json': '{}',
+        'package.json': JSON.stringify(fakePackeage, null, 2),
         ...fakeFiles,
       })
     )
   })
 
-  test('init does not generate any files by "doohickey init" if files already exist', async () => {
+  test('init does not generate any files by "doohickey init" and "doohickey init" if files already exist', async () => {
+    // __getMockFilesp
     const mockFiles = setMockFiles({
-      'package.json': '{}',
+      'package.json': JSON.stringify(fakePackeage, null, 2),
     })
 
     ;(cosmiconfig as jest.Mock).mockReturnValue({
@@ -131,14 +142,17 @@ describe('init test', () => {
     })
 
     await init(args)
-
     expect(__getMockFilesp()).toEqual(mockFiles)
   })
 
-  // test('init generate .eslintrc.js and extend package.json by "doohickey init -e"', async () => {
+  // test('init generate .eslintrc.js and extend package.json by "doohickey init -el"', async () => {
   //   args['e'] = true
   //   await init(args)
 
   //   expect(__getMockFilesp()).toEqual()
   // })
+
+  // husky 测试
+  // 不同参数与lint-staged的测试
+  // 文件不存在时的测试
 })

@@ -42,7 +42,7 @@ async function generateConfigFile(
             '.json5': () => 'json5',
           },
         }
-      : {}
+      : undefined
   )
   if (existing) {
     logger.log(`Writing ${filename}...`)
@@ -53,7 +53,7 @@ async function generateConfigFile(
 
 async function configExists(
   modulename: ModuleName,
-  cosmiconfigOpt: Options
+  cosmiconfigOpt?: Options
 ): Promise<boolean> {
   const explorer = cosmiconfig(modulename, cosmiconfigOpt)
 
@@ -122,6 +122,11 @@ async function generateStyleLintConfig(module: ModuleName) {
 }
 
 async function extendLintStagedPackage(modules: Array<ModuleName>) {
+  const existing = await configExists('lint-staged')
+  if (existing) {
+    return
+  }
+
   let extension: Partial<PackageJsonWithLintstaged> = {
     scripts: {
       'lint-staged': 'lint-staged',
