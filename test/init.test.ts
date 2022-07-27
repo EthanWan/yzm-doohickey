@@ -27,8 +27,17 @@ jest.mock('../cli/util', () => {
 
 jest.mock('fs/promises')
 
-// @ts-ignore
-const { access, readFile, __clearMockFilesp, __setMockFilesp, __getMockFilesp } = fsp
+const {
+  access,
+  writeFile,
+  readFile,
+  // @ts-ignore
+  __clearMockFilesp,
+  // @ts-ignore
+  __setMockFilesp,
+  // @ts-ignore
+  __getMockFilesp,
+} = fsp
 
 const args: yargsParser.Arguments = { _: [] }
 
@@ -87,6 +96,8 @@ describe('init test', () => {
     __setMockFilesp({
       'package.json': '{}',
     })
+    ;(readFile as jest.Mock).mockClear()
+    ;(writeFile as jest.Mock).mockClear()
   })
 
   afterEach(() => {
@@ -129,12 +140,11 @@ describe('init test', () => {
     )
   })
 
-  test('init does not generate any files by "doohickey init" and "doohickey init" if files already exist', async () => {
-    // __getMockFilesp
-    const mockFiles = setMockFiles({
+  test('init does not generate any files by "doohickey init" if files already exist', async () => {
+    __setMockFilesp({
+      ...fakeFiles,
       'package.json': JSON.stringify(fakePackeage, null, 2),
     })
-
     ;(cosmiconfig as jest.Mock).mockReturnValue({
       search: () => {
         return Promise.resolve(true)
@@ -142,17 +152,11 @@ describe('init test', () => {
     })
 
     await init(args)
-    expect(__getMockFilesp()).toEqual(mockFiles)
+    // .editorconfig exist
+    expect(readFile).toHaveBeenCalledWith('.editorconfig', 'utf8')
+    expect(readFile).toHaveReturnedWith(Promise.resolve(fakeFiles['.editorconfig']))
+
+    // write nothing
+    expect(writeFile).toHaveBeenCalledTimes(0)
   })
-
-  // test('init generate .eslintrc.js and extend package.json by "doohickey init -el"', async () => {
-  //   args['e'] = true
-  //   await init(args)
-
-  //   expect(__getMockFilesp()).toEqual()
-  // })
-
-  // husky 测试
-  // 不同参数与lint-staged的测试
-  // 文件不存在时的测试
 })

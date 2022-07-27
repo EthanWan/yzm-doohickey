@@ -44,7 +44,7 @@ async function generateConfigFile(
         }
       : undefined
   )
-  if (existing) {
+  if (!existing) {
     logger.log(`Writing ${filename}...`)
     await write(filename, contents)
     logger.info('Configuration is created successfully', modulename)
@@ -61,11 +61,11 @@ async function configExists(
     return Promise.reject(err)
   })
 
-  if (!file) return Promise.resolve(true)
+  if (!file) return Promise.resolve(false)
   logger.log('')
   logger.warn(`${modulename}: Configuration already exists in ${file.filepath} !`)
 
-  return Promise.resolve(false)
+  return Promise.resolve(true)
 }
 
 async function generateESLintConfig(module: ModuleName): Promise<void> {
