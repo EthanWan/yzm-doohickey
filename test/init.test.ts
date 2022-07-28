@@ -36,15 +36,18 @@ const {
   // @ts-ignore
   __setMockFilesp,
   // @ts-ignore
+  __addMockFilesp,
+  // @ts-ignore
   __getMockFilesp,
 } = fsp
 
-const args: yargsParser.Arguments = { _: [] }
+let args: yargsParser.Arguments = { _: [] }
 
 const fakePackeage = {
   scripts: {
     'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
     'lint-staged': 'lint-staged',
+    prepare: 'husky install',
   },
   'lint-staged': {
     '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
@@ -93,19 +96,21 @@ function setMockFiles(newMockFiles) {
 
 describe('init test', () => {
   beforeEach(() => {
+    args = { _: [] }
     __setMockFilesp({
       'package.json': '{}',
     })
     ;(readFile as jest.Mock).mockClear()
-    ;(writeFile as jest.Mock).mockClear()
   })
 
   afterEach(() => {
+    ;(runSpawn as jest.Mock).mockClear()
+    ;(writeFile as jest.Mock).mockClear()
     __clearMockFilesp()
-    jest.restoreAllMocks()
   })
 
   test('init results rejects if package.json dose not exist', async () => {
+    __setMockFilesp({})
     expect(init(args)).rejects
   })
 
@@ -129,6 +134,38 @@ describe('init test', () => {
     )
   })
 
+  test('init create all config file and extend package.json by "doohickey init -eslint --prettier --stylelint --lint-staged --husky"', async () => {
+    args['eslint'] =
+      args['prettier'] =
+      args['stylelint'] =
+      args['lint-staged'] =
+      args['husky'] =
+        true
+    await init(args)
+
+    await expect(__getMockFilesp()).toEqual(
+      setMockFiles({
+        'package.json': JSON.stringify(fakePackeage, null, 2),
+        ...fakeFiles,
+      })
+    )
+  })
+
+  // test('init use a single command option ', async () => {
+  //   const _args = {
+  //     ...args,
+  //     e: true,
+  //   }
+
+  //   await init(_args)
+  //   expect(__getMockFilesp()).toEqual(
+  //     setMockFiles({
+  //       'package.json': '{}',
+  //       '.eslintrc.js': fakeFiles['.eslintrc.js'],
+  //     })
+  //   )
+  // })
+
   test('init generate all config file by "doohickey init"', async () => {
     await init(args)
 
@@ -140,7 +177,7 @@ describe('init test', () => {
     )
   })
 
-  test('init does not generate any files by "doohickey init" if files already exist', async () => {
+  test('init does not generate any files by "doohickey init" if files already existed', async () => {
     __setMockFilesp({
       ...fakeFiles,
       'package.json': JSON.stringify(fakePackeage, null, 2),
@@ -156,7 +193,49 @@ describe('init test', () => {
     expect(readFile).toHaveBeenCalledWith('.editorconfig', 'utf8')
     expect(readFile).toHaveReturnedWith(Promise.resolve(fakeFiles['.editorconfig']))
 
-    // write nothing
-    expect(writeFile).toHaveBeenCalledTimes(0)
+    // init husky
+    expect(writeFile).toHaveBeenCalledTimes(1)
+  })
+
+  test('init generate .husky and commit-msg by "doohickey init -k"', async () => {
+    args['k'] = true
+    await init(args)
+    ;(runSpawn as jest.Mock)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(
+        __setMockFilesp({
+          '.husky/commit-msg': '',
+        })
+      )
+
+    expect(runSpawn).toHaveBeenCalledTimes(4)
+    await expect(__getMockFilesp()['.husky'].map(mockfile => mockfile.file)).toEqual([
+      'commit-msg',
+    ])
+  })
+
+  test('init generate .husky commit-msg pre-commit by "doohickey init -k -l"', async () => {
+    args['k'] = args['l'] = true
+    await init(args)
+    ;(runSpawn as jest.Mock)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(
+        __setMockFilesp({
+          '.husky/commit-msg': '',
+        })
+      )
+      .mockResolvedValueOnce(
+        __addMockFilesp({
+          '.husky/pre-commit': '',
+        })
+      )
+
+    expect(runSpawn).toHaveBeenCalledTimes(5)
+    await expect(__getMockFilesp()['.husky'].map(mockfile => mockfile.file)).toEqual([
+      'commit-msg',
+      'pre-commit',
+    ])
   })
 })

@@ -26,7 +26,8 @@
     "watch": "tsc --watch",
     "lint": "eslint --cache --ext .js,.ts **/*.js",
     "prettier": "prettier --write \"**/*\"",
-    "test": "jest /test --testPathIgnorePatterns=/test/fixtures"
+    "test": "jest /test --testPathIgnorePatterns=/test/fixtures",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",

@@ -104,6 +104,7 @@ insert_final_newline = true
       throw new Error(`Unknown error reading ${filename}: ${err.message}`)
     }
   }
+
   if (existing && existing === config) {
     logger.log(`No edits needed in ${filename}`)
     return
@@ -158,13 +159,12 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
       ...(extension['lint-staged'] ?? {}),
     }
   }
-
   return extendPackage(extension)
 }
 
 async function initHusky(modules) {
   try {
-    await access('./.husky')
+    await access('.husky')
     logger.log('')
     logger.warn(`husky: Configuration already existing !`)
     return
@@ -183,7 +183,6 @@ async function initHusky(modules) {
       prepare: 'husky install',
     },
   })
-
   await run(getNPMCommand(), ['run', 'prepare'])
   await run('npx', [
     'husky',

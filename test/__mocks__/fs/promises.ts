@@ -37,9 +37,7 @@ export function __cloneMockFilesFromFS(mf) {
  * Clear mock files
  */
 export function __clearMockFilesp() {
-  mockFiles = {
-    '.': [],
-  }
+  mockFiles = Object.create(null)
 }
 
 /**
@@ -48,6 +46,14 @@ export function __clearMockFilesp() {
  */
 export function __setMockFilesp(newMockFiles: { [key: string]: string }) {
   mockFiles = Object.create(null)
+  __addMockFilesp(newMockFiles)
+}
+
+/**
+ * Add new mock files to file system
+ * @param {Object} newMockFiles
+ */
+export function __addMockFilesp(newMockFiles: { [key: string]: string }) {
   for (const file in newMockFiles) {
     const dir = path.dirname(file)
     if (!mockFiles[dir]) {
@@ -122,7 +128,7 @@ export const readFile = jest.fn((filePath, options) => {
 export const access = jest.fn(filePath => {
   const dir = path.dirname(filePath)
   mockFiles[dir]
-  if (Array.isArray(mockFiles[dir])) {
+  if (Array.isArray(mockFiles[dir]) && dir !== '.') {
     return Promise.resolve(true)
   }
   const file = getFileByMockFS(filePath)
