@@ -43,6 +43,11 @@ const {
 
 let args: yargsParser.Arguments = { _: [] }
 
+const ESLINT = '.eslintrc.js'
+const EDITORCONFIG = '.editorconfig'
+const STYLELINT = '.stylelintrc.js'
+const PRETTIER = '.prettierrc.js'
+
 const fakePackeage = {
   scripts: {
     'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
@@ -120,7 +125,7 @@ describe('init test', () => {
     expect(access).toHaveBeenCalled()
   })
 
-  test('init create all config file and extend package.json by "doohickey init -e -p -s -l -k" or "doohickey init -epslk"', async () => {
+  test('init generate all config file and extend package.json by "doohickey init -e -p -s -l -k" or "doohickey init -epslk"', async () => {
     args['e'] = args['p'] = args['s'] = args['l'] = args['k'] = true
     await init(args)
     expect(cosmiconfig).toHaveBeenCalled()
@@ -134,7 +139,7 @@ describe('init test', () => {
     )
   })
 
-  test('init create all config file and extend package.json by "doohickey init -eslint --prettier --stylelint --lint-staged --husky"', async () => {
+  test('init generate all config file and extend package.json by "doohickey init -eslint --prettier --stylelint --lint-staged --husky"', async () => {
     args['eslint'] =
       args['prettier'] =
       args['stylelint'] =
@@ -150,21 +155,6 @@ describe('init test', () => {
       })
     )
   })
-
-  // test('init use a single command option ', async () => {
-  //   const _args = {
-  //     ...args,
-  //     e: true,
-  //   }
-
-  //   await init(_args)
-  //   expect(__getMockFilesp()).toEqual(
-  //     setMockFiles({
-  //       'package.json': '{}',
-  //       '.eslintrc.js': fakeFiles['.eslintrc.js'],
-  //     })
-  //   )
-  // })
 
   test('init generate all config file by "doohickey init"', async () => {
     await init(args)
@@ -237,5 +227,133 @@ describe('init test', () => {
       'commit-msg',
       'pre-commit',
     ])
+  })
+
+  const expectFinalMockFiles = (modules: string[], packageJson = {}) => {
+    const initFiles = {
+      'package.json': JSON.stringify(packageJson, null, 2),
+    }
+    modules.forEach(module => {
+      if (fakeFiles[module]) {
+        initFiles[module] = fakeFiles[module]
+      }
+    })
+    expect(__getMockFilesp()).toEqual(setMockFiles(initFiles))
+  }
+
+  test('init use a single command option for eslint', async () => {
+    ;(cosmiconfig as jest.Mock).mockReturnValue({
+      search: () => {
+        return Promise.resolve(undefined)
+      },
+    })
+    await init({
+      ...args,
+      e: true,
+    })
+    expectFinalMockFiles([ESLINT])
+    await init({
+      ...args,
+      eslint: true,
+    })
+    expectFinalMockFiles([ESLINT])
+  })
+
+  test('init use a single command option for prettier', async () => {
+    await init({
+      ...args,
+      p: true,
+    })
+    expectFinalMockFiles([EDITORCONFIG, PRETTIER])
+    await init({
+      ...args,
+      prettier: true,
+    })
+    expectFinalMockFiles([EDITORCONFIG, PRETTIER])
+  })
+
+  test('init use a single command option for stylelint', async () => {
+    await init({
+      ...args,
+      s: true,
+    })
+    expectFinalMockFiles([STYLELINT])
+    await init({
+      ...args,
+      stylelint: true,
+    })
+    expectFinalMockFiles([STYLELINT])
+  })
+
+  test('init use a single command option for lint-staged', async () => {
+    await init({
+      ...args,
+      l: true,
+    })
+    expectFinalMockFiles([], {
+      scripts: {
+        'lint-staged': 'lint-staged',
+      },
+      'lint-staged': {},
+    })
+    await init({
+      ...args,
+      'lint-staged': true,
+    })
+    expectFinalMockFiles([], {
+      scripts: {
+        'lint-staged': 'lint-staged',
+      },
+      'lint-staged': {},
+    })
+  })
+
+  test('init extend package.json by "doohicky init -el', async () => {
+    await init({
+      ...args,
+      l: true,
+      e: true,
+    })
+    expectFinalMockFiles([ESLINT], {
+      scripts: {
+        'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
+        'lint-staged': 'lint-staged',
+      },
+      'lint-staged': {
+        '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js',
+      },
+    })
+  })
+
+  test('init extend package.json by "doohicky init -pl"', async () => {
+    await init({
+      ...args,
+      l: true,
+      p: true,
+    })
+    expectFinalMockFiles([EDITORCONFIG, PRETTIER], {
+      scripts: {
+        'lint-staged': 'lint-staged',
+      },
+      'lint-staged': {
+        '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
+      },
+    })
+  })
+
+  test('init extend package.json by "doohicky init -sl"', async () => {
+    await init({
+      ...args,
+      l: true,
+      s: true,
+    })
+    expectFinalMockFiles([STYLELINT], {
+      scripts: {
+        'lint-staged': 'lint-staged',
+      },
+      'lint-staged': {
+        '**/*.less': 'stylelint --syntax less',
+      },
+    })
   })
 })

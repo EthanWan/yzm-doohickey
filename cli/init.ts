@@ -132,6 +132,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
     scripts: {
       'lint-staged': 'lint-staged',
     },
+    'lint-staged': {},
   }
   if (modules.includes('eslint')) {
     extension = {

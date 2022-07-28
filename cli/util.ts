@@ -16,10 +16,10 @@ export interface Logger {
 }
 
 interface LintstagedPkgConfig {
-  'lint-staged': {}
+  'lint-staged': { [key: string]: string }
 }
 
-export type PackageJsonWithLintstaged = LintstagedPkgConfig | PackageJson
+export type PackageJsonWithLintstaged = LintstagedPkgConfig & PackageJson
 
 // ====== Logger Start ====== //
 
