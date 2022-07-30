@@ -50,14 +50,16 @@ const PRETTIER = '.prettierrc.js'
 
 const fakePackeage = {
   scripts: {
-    'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
+    'lint:prettier': 'doohickey lint:prettier --write',
+    'lint:style': 'doohickey lint:style --syntax less',
+    'lint:js': 'doohickey lint:js --ext .js,.jsx,.ts,.tsx ',
     'lint-staged': 'lint-staged',
     prepare: 'husky install',
   },
   'lint-staged': {
-    '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
-    '**/*.less': 'stylelint --syntax less',
-    '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js',
+    '**/*.{js,jsx,tsx,ts,less,md,json}': 'npm run lint:prettier',
+    '**/*.less': 'npm run lint:style',
+    '**/*.{js,jsx,ts,tsx}': 'npm run lint:js',
   },
 }
 
@@ -316,11 +318,11 @@ describe('init test', () => {
     })
     expectFinalMockFiles([ESLINT], {
       scripts: {
-        'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
+        'lint:js': 'doohickey lint:js --ext .js,.jsx,.ts,.tsx ',
         'lint-staged': 'lint-staged',
       },
       'lint-staged': {
-        '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js',
+        '**/*.{js,jsx,ts,tsx}': 'npm run lint:js',
       },
     })
   })
@@ -333,10 +335,11 @@ describe('init test', () => {
     })
     expectFinalMockFiles([EDITORCONFIG, PRETTIER], {
       scripts: {
+        'lint:prettier': 'doohickey lint:prettier --write',
         'lint-staged': 'lint-staged',
       },
       'lint-staged': {
-        '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
+        '**/*.{js,jsx,tsx,ts,less,md,json}': 'npm run lint:prettier',
       },
     })
   })
@@ -349,10 +352,11 @@ describe('init test', () => {
     })
     expectFinalMockFiles([STYLELINT], {
       scripts: {
+        'lint:style': 'doohickey lint:style --syntax less',
         'lint-staged': 'lint-staged',
       },
       'lint-staged': {
-        '**/*.less': 'stylelint --syntax less',
+        '**/*.less': 'npm run lint:style',
       },
     })
   })

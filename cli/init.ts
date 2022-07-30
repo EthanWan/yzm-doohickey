@@ -137,27 +137,40 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
   if (modules.includes('eslint')) {
     extension = {
       scripts: {
-        'lint-staged:js': 'eslint --ext .js,.jsx,.ts,.tsx ',
+        'lint:js': 'doohickey lint:js --ext .js,.jsx,.ts,.tsx ',
         ...extension.scripts,
       },
       'lint-staged': {
-        '**/*.{js,jsx,ts,tsx}': 'npm run lint-staged:js',
+        '**/*.{js,jsx,ts,tsx}': 'npm run lint:js',
       },
     }
   }
 
   // Defalut syntax less
   if (modules.includes('stylelint')) {
-    extension['lint-staged'] = {
-      '**/*.less': 'stylelint --syntax less',
-      ...(extension['lint-staged'] ?? {}),
+    extension = {
+      scripts: {
+        'lint:style': 'doohickey lint:style --syntax less',
+        ...extension.scripts,
+      },
+      // TODO: check CSS preprocessor
+      'lint-staged': {
+        '**/*.less': 'npm run lint:style',
+        ...(extension['lint-staged'] ?? {}),
+      },
     }
   }
 
   if (modules.includes('prettier')) {
-    extension['lint-staged'] = {
-      '**/*.{js,jsx,tsx,ts,less,md,json}': 'prettier --write',
-      ...(extension['lint-staged'] ?? {}),
+    extension = {
+      scripts: {
+        'lint:prettier': 'doohickey lint:prettier --write',
+        ...extension.scripts,
+      },
+      'lint-staged': {
+        '**/*.{js,jsx,tsx,ts,less,md,json}': 'npm run lint:prettier',
+        ...(extension['lint-staged'] ?? {}),
+      },
     }
   }
   return extendPackage(extension)
