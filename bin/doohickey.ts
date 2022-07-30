@@ -3,13 +3,14 @@ import * as yargs from 'yargs-parser'
 import yargsParser = require('yargs-parser')
 import * as semver from 'semver'
 import init from '../cli/init.js'
-import { logger } from '../cli/util'
+import { logger, runSpawn as run } from '../cli/util'
 
 const args: yargsParser.Arguments = yargs(process.argv.slice(2))
-const version = require('../package').version
+const flags: string[] = process.argv.slice(3)
+const version: string = require('../package').version
 
 if (args.v || args.version) {
-  console.log(version)
+  logger.log(version)
   process.exit(0)
 }
 
@@ -26,24 +27,33 @@ const option = args._[0]
 switch (option) {
   case 'init':
     if (args.h || args.help) {
-      console.log(`
+      logger.log(`
 Usage:  doohickey init [OPTIONS]
 
 Options:
-  [defalut]          'doohickey init' contains all options below
-  -e, --eslint       add the ESLint configuration to project
-  -p, --prettier     add the Prettier configuration to project
-  -s, --stylelint    add the Prettier configuration to project
-  -l, --lintstaged   add the Lint-staged configuration to project
-  -k, --husky        add the .husky directory to project and init git hooks
+  [defalut]          'doohickey init' contains all options below.
+  -e, --eslint       Add the ESLint configuration to project.
+  -p, --prettier     Add the Prettier configuration to project.
+  -s, --stylelint    Add the Prettier configuration to project.
+  -l, --lintstaged   Add the Lint-staged configuration to project.
+  -k, --husky        Add the .husky directory to project and init git hooks.
         `)
       break
     }
     init(args)
     break
+  case 'lint:js':
+    run('node', ['./node_modules/eslint/bin/eslint', ...flags])
+    break
+  case 'lint:prettier':
+    run('node', ['./node_modules/prettier/bin-prettier', ...flags])
+    break
+  case 'lint:style':
+    run('node', ['./node_modules/stylelint/bin/stylelint', ...flags])
+    break
   case 'verify-commit':
     if (args.h || args.help) {
-      console.log(`This command takes no options`)
+      logger.log(`This command takes no options`)
       break
     }
     // ingore other options
@@ -51,7 +61,7 @@ Options:
     break
   default:
     if (args.h || args.help) {
-      console.log(`
+      logger.log(`
 Usage:  doohickey COMMAND [OPTIONS]
 
 A quick configuration tool for react app
@@ -61,13 +71,16 @@ Options:
   -v, --version
 
 Commands:
-  init              initialize prettier、eslint、stylelint、lint-staged、husky
-  verifyCommitMsg   verify git commit message
+  init              Generate configuration and adds npm scripts to package.json.
+  lint:js           Lint code issues by eslint.
+  lint:prettier     Checks code for formatting by prettier.
+  lint:style        Checks style code for formatting and lint issues.
+  verifyCommitMsg   Verify git commit message.
 
 Run 'doohickey COMMAND --help' for more information on a command.
         `)
     } else {
-      console.log(`
+      logger.log(`
 doohickey: '${option}' is not a doohickey command.
 See 'doohickey --help'
       `)
