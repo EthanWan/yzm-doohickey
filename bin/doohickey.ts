@@ -34,7 +34,7 @@ Options:
   [defalut]          'doohickey init' contains all options below.
   -e, --eslint       Add the ESLint configuration to project.
   -p, --prettier     Add the Prettier configuration to project.
-  -s, --stylelint    Add the Prettier configuration to project.
+  -s, --stylelint    Add the Stylelint configuration to project.
   -l, --lintstaged   Add the Lint-staged configuration to project.
   -k, --husky        Add the .husky directory to project and init git hooks.
         `)
@@ -74,7 +74,7 @@ Commands:
   init              Generate configuration and adds npm scripts to package.json.
   lint:js           Lint code issues by eslint.
   lint:prettier     Checks code for formatting by prettier.
-  lint:style        Checks style code for formatting and lint issues.
+  lint:style        Checks CSS code for formatting and lint issues by stylelint.
   verifyCommitMsg   Verify git commit message.
 
 Run 'doohickey COMMAND --help' for more information on a command.
