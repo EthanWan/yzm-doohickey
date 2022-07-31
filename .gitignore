@@ -12,3 +12,4 @@ TODO.md
 /cli/init.old.js
 
 /test/fixtrue/kitchen/node_modules
+/test/fixtrue/kitchen/.git

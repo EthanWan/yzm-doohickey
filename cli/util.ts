@@ -121,8 +121,14 @@ export async function extendPackage(
   return write('./package.json', JSON.stringify(pkg, null, 2))
 }
 
-export async function runSpawn(cmd: string, args: ReadonlyArray<string>): Promise<void> {
-  logger.warn(`${cmd} ${args.join(' ')}`, 'EXECTING')
+export async function runSpawn(
+  cmd: string,
+  args: ReadonlyArray<string>,
+  silence = false
+): Promise<void> {
+  if (silence) {
+    logger.warn(`${cmd} ${args.join(' ')}`, 'EXECTING')
+  }
 
   return new Promise((resolve, reject) => {
     const child = spawn(cmd, args, { stdio: 'inherit' })

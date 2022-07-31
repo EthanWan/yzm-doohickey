@@ -63,7 +63,7 @@ async function configExists(
 
   if (!file) return Promise.resolve(false)
   logger.log('')
-  logger.warn(`${modulename}: Configuration already exists in ${file.filepath} !`)
+  logger.warn(`${modulename}: Configuration already existed in ${file.filepath} !`)
 
   return Promise.resolve(true)
 }
@@ -79,7 +79,7 @@ async function generatePrettierConfig(module: ModuleName): Promise<void> {
   const style = `module.exports = {
   ...require('yzm-doohickey/standard/prettier')
 }`
-  return generateConfigFile(module, './.prettierrc.js', style)
+  return generateConfigFile(module, '.prettierrc.js', style)
 }
 
 async function generateEditorConfig(): Promise<void> {
@@ -119,7 +119,7 @@ async function generateStyleLintConfig(module: ModuleName) {
   extends: [require.resolve('yzm-doohickey/standard/stylelint')]
 }`
 
-  return generateConfigFile(module, './.stylelintrc.js', config)
+  return generateConfigFile(module, '.stylelintrc.js', config)
 }
 
 async function extendLintStagedPackage(modules: Array<ModuleName>) {
@@ -148,29 +148,17 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
 
   // Defalut syntax less
   if (modules.includes('stylelint')) {
-    extension = {
-      scripts: {
-        'lint:style': 'doohickey lint:style --syntax less',
-        ...extension.scripts,
-      },
+    extension['lint-staged'] = {
       // TODO: check CSS preprocessor
-      'lint-staged': {
-        '**/*.less': 'npm run lint:style',
-        ...(extension['lint-staged'] ?? {}),
-      },
+      '**/*.less': 'doohickey lint:style --syntax less',
+      ...(extension['lint-staged'] ?? {}),
     }
   }
 
   if (modules.includes('prettier')) {
-    extension = {
-      scripts: {
-        'lint:prettier': 'doohickey lint:prettier --write',
-        ...extension.scripts,
-      },
-      'lint-staged': {
-        '**/*.{js,jsx,tsx,ts,less,md,json}': 'npm run lint:prettier',
-        ...(extension['lint-staged'] ?? {}),
-      },
+    extension['lint-staged'] = {
+      '**/*.{js,jsx,tsx,ts,less,md,json}': 'doohickey lint:prettier --write',
+      ...(extension['lint-staged'] ?? {}),
     }
   }
   return extendPackage(extension)
@@ -210,7 +198,7 @@ async function initHusky(modules) {
       'husky',
       'add',
       '.husky/pre-commit',
-      `"npx --no-install lint-staged"`,
+      `"npx --no-install npm run lint-staged"`,
     ])
   }
 }

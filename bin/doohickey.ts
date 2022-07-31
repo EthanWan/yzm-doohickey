@@ -7,7 +7,7 @@ import { logger, runSpawn as run } from '../cli/util'
 
 const args: yargsParser.Arguments = yargs(process.argv.slice(2))
 const flags: string[] = process.argv.slice(3)
-const version: string = require('../package').version
+const version: string = require('../../package').version
 
 if (args.v || args.version) {
   logger.log(version)
@@ -43,13 +43,13 @@ Options:
     init(args)
     break
   case 'lint:js':
-    run('node', ['./node_modules/eslint/bin/eslint', ...flags])
+    run('node', ['./node_modules/eslint/bin/eslint', ...flags], true)
     break
   case 'lint:prettier':
-    run('node', ['./node_modules/prettier/bin-prettier', ...flags])
+    run('node', ['./node_modules/prettier/bin-prettier', ...flags], true)
     break
   case 'lint:style':
-    run('node', ['./node_modules/stylelint/bin/stylelint', ...flags])
+    run('node', ['./node_modules/stylelint/bin/stylelint', ...flags], true)
     break
   case 'verify-commit':
     if (args.h || args.help) {

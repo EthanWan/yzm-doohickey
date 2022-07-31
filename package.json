@@ -24,6 +24,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
+    "release": "tsc && npm publish",
     "lint": "eslint --cache --ext .js,.ts **/*.js",
     "prettier": "prettier --write \"**/*\"",
     "test": "jest /test --testPathIgnorePatterns=/test/fixtures"
