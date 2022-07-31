@@ -1,3 +1,3 @@
 module.exports = {
-  extends: [require.resolve('yzm-doohickey/dist/standard/eslint')],
+  extends: [require.resolve('yzm-doohickey')],
 }

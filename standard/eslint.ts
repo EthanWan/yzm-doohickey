@@ -62,6 +62,8 @@ const parserOptions = {
 }
 
 module.exports = {
+  // The main configuration is the current one
+  root: true,
   extends: [
     'google',
     'eslint:recommended',

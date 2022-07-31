@@ -1,3 +1,3 @@
 module.exports = {
-  ...require('yzm-doohickey/dist/standard/prettier')
+  ...require('yzm-doohickey').prettier
 }

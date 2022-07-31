@@ -70,14 +70,14 @@ async function configExists(
 
 async function generateESLintConfig(module: ModuleName): Promise<void> {
   const config = `module.exports = {
-  extends: [require.resolve('yzm-doohickey/standard/eslint')]
+  extends: [require.resolve('yzm-doohickey')]
 }`
   return generateConfigFile(module, '.eslintrc.js', config)
 }
 
 async function generatePrettierConfig(module: ModuleName): Promise<void> {
   const style = `module.exports = {
-  ...require('yzm-doohickey/standard/prettier')
+  ...require('yzm-doohickey').prettier
 }`
   return generateConfigFile(module, '.prettierrc.js', style)
 }
@@ -116,7 +116,7 @@ insert_final_newline = true
 
 async function generateStyleLintConfig(module: ModuleName) {
   const config = `module.exports = {
-  extends: [require.resolve('yzm-doohickey/standard/stylelint')]
+  extends: [require.resolve('yzm-doohickey/stylelint')]
 }`
 
   return generateConfigFile(module, '.stylelintrc.js', config)

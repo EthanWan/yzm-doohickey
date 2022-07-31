@@ -24,17 +24,14 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "doo": "doohickey init",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx ",
+    "prettier": "prettier **/*.{js,jsx,tsx,ts,less,md,json} --write",
+    "style": "stylelint **/*.css --syntax",
     "lint:prettier": "doohickey lint:prettier **/*.{js,jsx,tsx,ts,less,md,json} --write",
     "lint:style": "doohickey lint:style **/*.css --syntax",
     "lint:js": "doohickey lint:js --ext .js,.jsx,.ts,.tsx ",
     "lint-staged": "lint-staged",
     "prepare": "husky install"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -49,8 +46,8 @@
     ]
   },
   "lint-staged": {
-    "**/*.{js,jsx,tsx,ts,less,md,json}": "npm run lint:prettier",
-    "**/*.less": "npm run lint:style",
+    "**/*.{js,jsx,tsx,ts,less,md,json}": "doohickey lint:prettier --write",
+    "**/*.less": "doohickey lint:style --syntax less",
     "**/*.{js,jsx,ts,tsx}": "npm run lint:js"
   },
   "devDependencies": {

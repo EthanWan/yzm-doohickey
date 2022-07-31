@@ -126,7 +126,7 @@ export async function runSpawn(
   args: ReadonlyArray<string>,
   silence = false
 ): Promise<void> {
-  if (silence) {
+  if (!silence) {
     logger.warn(`${cmd} ${args.join(' ')}`, 'EXECTING')
   }
 

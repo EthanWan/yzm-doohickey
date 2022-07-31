@@ -2,7 +2,7 @@
   "name": "yzm-doohickey",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/standard/index.js",
+  "main": "index.js",
   "author": {
     "name": "EthanWan",
     "email": "wanshiyi23@gmail.com"

@@ -1,4 +1,4 @@
-const { prettier } = require('./dist/standard')
+const { prettier } = require('.')
 
 module.exports = {
   ...prettier
