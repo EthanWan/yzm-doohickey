@@ -55,7 +55,11 @@ async function configExists(
   modulename: ModuleName,
   cosmiconfigOpt?: Options
 ): Promise<boolean> {
-  const explorer = cosmiconfig(modulename, cosmiconfigOpt)
+  const explorer = cosmiconfig(modulename, {
+    // Directory where the search will stop.
+    stopDir: process.cwd(),
+    ...(cosmiconfigOpt ?? {}),
+  })
 
   const file = await explorer.search().catch(err => {
     return Promise.reject(err)

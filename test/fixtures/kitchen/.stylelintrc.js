@@ -1,3 +1,3 @@
 module.exports = {
-  extends: [require('yzm-doohickey').stylelint],
+  extends: [require('yzm-doohickey').stylelint]
 }
