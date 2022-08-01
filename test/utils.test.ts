@@ -124,6 +124,18 @@ describe('util test', () => {
     await expect(run('npm', ['install'])).resolves.toBe(undefined)
   })
 
+  test('runSpawn do not print log by send silence true', async () => {
+    ;(spawn as jest.Mock).mockReturnValue({
+      on: (_, cb) => {
+        cb(0)
+      },
+    })
+    jest.spyOn(global.console, 'warn')
+
+    await run('npm', ['install'], true)
+    expect(console.warn).toHaveBeenCalledTimes(0)
+  })
+
   test("isYarnUsed returns true if there's yarn.lock file only", () => {
     __setMockFiles({
       'yarn.lock': '',
