@@ -18,7 +18,7 @@ Initialize all configuration with the following commands, including `.eslintrc.j
 doohickey init
 ```
 
-## Other
+## Others
 
 You can view all cli options with the following command
 
