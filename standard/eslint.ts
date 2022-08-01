@@ -86,7 +86,6 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'require-jsdoc': 'off',
     'guard-for-in': 'off',
-
     'react/display-name': 0,
     'react/jsx-props-no-spreading': 0,
     'react/state-in-constructor': 0,
@@ -133,9 +132,9 @@ module.exports = {
     'import/extensions': ['.js', '.mjs', '.jsx', '.ts', '.tsx', '.d.ts'],
     'import/external-module-folders': ['node_modules', 'node_modules/@types'],
     polyfills: ['fetch', 'Promise', 'URL', 'object-assign'],
-    // react: {
-    //   version: '0.0.0',
-    // },
+    react: {
+      version: '18.0.0',
+    },
   },
   overrides: isTsProject
     ? [

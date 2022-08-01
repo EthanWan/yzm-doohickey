@@ -130,14 +130,12 @@ export async function runSpawn(
     logger.warn(`${cmd} ${args.join(' ')}`, 'EXECTING')
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     const child = spawn(cmd, args, { stdio: 'inherit' })
 
     child.on('close', function (code) {
       if (code === 0) {
         resolve()
-      } else {
-        reject(new Error('Something Wrong!'))
       }
     })
   })

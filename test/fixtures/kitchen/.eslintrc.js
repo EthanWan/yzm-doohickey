@@ -1,3 +1,3 @@
 module.exports = {
-  extends: [require.resolve('yzm-doohickey')],
+  extends: [require('yzm-doohickey').eslint],
 }

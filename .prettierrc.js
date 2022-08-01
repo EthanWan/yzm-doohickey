@@ -1,5 +1,3 @@
-const { prettier } = require('.')
-
 module.exports = {
-  ...prettier
+  ...require('./index').prettier,
 }

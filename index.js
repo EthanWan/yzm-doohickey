@@ -1,5 +1,7 @@
-const eslint = require('./dist/standard/eslint')
 const prettier = require('./dist/standard/prettier')
 
-exports = prettier
-module.exports = eslint
+module.exports = {
+  prettier,
+  eslint: require.resolve('./dist/standard/eslint'),
+  stylelint: require.resolve('./dist/standard/stylelint'),
+}

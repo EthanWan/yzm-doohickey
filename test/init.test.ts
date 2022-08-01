@@ -73,10 +73,10 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 `,
   '.eslintrc.js': `module.exports = {
-  extends: [require.resolve('yzm-doohickey')]
+  extends: [require('yzm-doohickey').eslint]
 }`,
   '.stylelintrc.js': `module.exports = {
-  extends: [require.resolve('yzm-doohickey/stylelint')]
+  extends: [require('yzm-doohickey').stylelint]
 }`,
   '.prettierrc.js': `module.exports = {
   ...require('yzm-doohickey').prettier

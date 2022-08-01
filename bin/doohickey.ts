@@ -43,13 +43,17 @@ Options:
     init(args)
     break
   case 'lint:js':
-    run('node', ['./node_modules/eslint/bin/eslint', ...flags], true)
+    run('node', ['./node_modules/eslint/bin/eslint', ...flags], true).catch(console.log)
     break
   case 'lint:prettier':
-    run('node', ['./node_modules/prettier/bin-prettier', ...flags], true)
+    run('node', ['./node_modules/prettier/bin-prettier', ...flags], true).catch(
+      console.log
+    )
     break
   case 'lint:style':
-    run('node', ['./node_modules/stylelint/bin/stylelint', ...flags], true)
+    run('node', ['./node_modules/stylelint/bin/stylelint', ...flags], true).catch(
+      console.log
+    )
     break
   case 'verify-commit':
     if (args.h || args.help) {

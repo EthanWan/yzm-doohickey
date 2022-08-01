@@ -104,14 +104,14 @@ describe('util test', () => {
     expect(writeFile).toHaveBeenCalledTimes(1)
   })
 
-  test('runSpawn returns rejects by incorrect command', async () => {
+  test('runSpawn returns null by incorrect command', async () => {
     ;(spawn as jest.Mock).mockReturnValue({
       on: (_, cb) => {
         cb(1)
       },
     })
 
-    await expect(run('npm', ['add'])).rejects.toStrictEqual(new Error('Something Wrong!'))
+    await expect(run('npm', ['add'])).toBeNull
   })
 
   test('runSpawn returns resolves by correct command', async () => {
