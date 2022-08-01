@@ -12,7 +12,7 @@ yarn add yzm-doohickey -D
 
 ## Usage
 
-通过如下命令初始化所有配置项，包含`.eslintrc.js`、`.perttierrc.js`、`.stylelintrc.js`、`.husky` and npm scripts `lint-staged`
+Initialize all configuration with the following commands, including `.eslintrc.js`, `.perttierrc.js`, `.stylelintrc.js`, `.husky` and npm scripts `lint-staged`
 
 ```bash
 doohickey init
@@ -20,7 +20,7 @@ doohickey init
 
 ## Other
 
-可以通过如下命令查看所有 cli 选项
+You can view all cli options with the following command
 
 ```bash
 doohickey --help
