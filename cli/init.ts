@@ -132,16 +132,12 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
   }
 
   let extension: Partial<PackageJsonWithLintstaged> = {
-    scripts: {
-      'lint-staged': 'lint-staged',
-    },
     'lint-staged': {},
   }
   if (modules.includes('eslint')) {
     extension = {
       scripts: {
         'lint:js': 'doohickey lint:js --ext .js,.jsx,.ts,.tsx ',
-        ...extension.scripts,
       },
       'lint-staged': {
         '**/*.{js,jsx,ts,tsx}': 'npm run lint:js',
@@ -193,7 +189,7 @@ async function initHusky(modules) {
     'husky',
     'add',
     '.husky/commit-msg',
-    `"npx --no-install doohickey verifyCommitMsg"`,
+    'npx --no-install doohickey verifyCommitMsg --edit $1',
   ])
 
   if (modules.includes('lint-staged')) {
@@ -201,7 +197,7 @@ async function initHusky(modules) {
       'husky',
       'add',
       '.husky/pre-commit',
-      `"npx --no-install npm run lint-staged"`,
+      'npx --no-install lint-staged',
     ])
   }
 }
