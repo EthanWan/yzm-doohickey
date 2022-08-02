@@ -1,8 +1,9 @@
 {
   "name": "yzm-doohickey",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "JS, TS, CSS style guide for react project",
   "main": "index.js",
+  "repository": "EthanWan/yzm-doohickey",
   "author": {
     "name": "EthanWan",
     "email": "wanshiyi23@gmail.com"
@@ -10,12 +11,18 @@
   "bin": {
     "doohickey": "dist/bin/doohickey.js"
   },
+  "files": [
+    "dist/bin",
+    "dist/cli",
+    "dist/standard",
+    "index.js",
+    "tsconfig.json"
+  ],
   "keywords": [
     "doohickey",
     "react",
     "typescript",
     "eslint",
-    "config",
     "prettier",
     "stylelint",
     "lint-staged",

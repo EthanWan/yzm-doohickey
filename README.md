@@ -1,6 +1,12 @@
 # yzm-doohickey
 
-Some configuration gadgets of the react project mainly include some lint rules of javascript, typescript, jsx, code formatting rules, css rules, git commit rules, etc. By eliminating some repetitive code rules configuration at the beginning of the developer project, you can focus more on business development. For specific rules, please refer to the standard directory.
+<p>
+  <a href="https://www.npmjs.com/package/yzm-doohickey"><img src="https://badgen.net/npm/v/yzm-doohickey" alt="Version" /></a>
+  <a href="https://app.codecov.io/gh/EthanWan/yzm-doohickey"><img src="https://codecov.io/gh/EthanWan/yzm-doohickey/branch/master/graph/badge.svg?precision=2" alt="codecov" /></a>
+  <a href="https://www.npmjs.com/package/yzm-doohickey"><img src="https://badgen.net/npm/license/yzm-doohickey" alt="License" /></a>
+</p>
+
+Yzm-doohickey is a configuration gadgets of the react project mainly include some lint rules of javascript, typescript, jsx, code formatting rules, css rules, git commit rules, etc. By eliminating some repetitive code rules configuration at the beginning of the developer project, you can focus more on business development. For specific rules, please refer to the standard directory.
 
 ## Installed
 
@@ -20,7 +26,7 @@ doohickey init
 
 ## Others
 
-You can view all cli options with the following command
+View all cli options with the following command
 
 ```bash
 doohickey --help
