@@ -2,6 +2,7 @@
 
 <p>
   <a href="https://www.npmjs.com/package/yzm-doohickey"><img src="https://badgen.net/npm/v/yzm-doohickey" alt="Version" /></a>
+  <a href="https://github.com/EthanWan/yzm-doohickey/actions"><img src="https://github.com/EthanWan/yzm-doohickey/workflows/release/badge.svg" alt="Release" /></a>
   <a href="https://app.codecov.io/gh/EthanWan/yzm-doohickey"><img src="https://codecov.io/gh/EthanWan/yzm-doohickey/branch/master/graph/badge.svg?precision=2" alt="codecov" /></a>
   <a href="https://www.npmjs.com/package/yzm-doohickey"><img src="https://badgen.net/npm/license/yzm-doohickey" alt="License" /></a>
 </p>

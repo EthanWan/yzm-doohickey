@@ -1,6 +1,6 @@
 {
   "name": "yzm-doohickey",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "JS, TS, CSS style guide for react project",
   "main": "index.js",
   "repository": "EthanWan/yzm-doohickey",
