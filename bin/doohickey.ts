@@ -2,6 +2,7 @@
 import * as yargs from 'yargs-parser'
 import yargsParser = require('yargs-parser')
 import * as semver from 'semver'
+import verifyCommitMsg from '../cli/verify-commit-msg'
 import init from '../cli/init.js'
 import { logger, runSpawn as run } from '../cli/util'
 
@@ -55,13 +56,26 @@ Options:
       console.log
     )
     break
-  case 'verify-commit':
+  case 'verifyCommitMsg':
     if (args.h || args.help) {
-      logger.log(`This command takes no options`)
+      logger.log(`
+Usage:  doohickey verifyCommitMsg [OPTIONS]
+
+Options:
+  -e, --edit   read last commit message from the specified file or fallbacks to ./.git/COMMIT_EDITMSG.
+       `)
       break
     }
+
+    if (args.e || args.edit) {
+      verifyCommitMsg(args.e || args.edit)
+      break
+    }
+    logger.log(`
+doohickey verifyCommitMsg must have option -e or --edit.
+`)
     // ingore other options
-    require('../cli/verify-commit-msg')
+    // require('../cli/verify-commit-msg')
     break
   default:
     if (args.h || args.help) {
