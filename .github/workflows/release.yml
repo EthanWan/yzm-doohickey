@@ -2,7 +2,8 @@ name: release
 
 on:
   pull_request:
-    branches: [ $default-branch ]
+    branches: 
+    - master
 
 jobs:
   test:
