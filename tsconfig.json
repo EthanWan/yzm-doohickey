@@ -19,6 +19,6 @@
     "resolveJsonModule": true
   },
   "types": ["jest", "node"],
-  "include": ["bin/*.ts", "cli/*.ts", "standard/*.ts", "test/**/*.ts"],
+  "include": ["bin/*.ts", "cli/*.ts", "standard/*.ts", "test/**/*.ts", "index.ts"],
   "exclude": ["node_modules", "test/fixtures/**/*"]
 }

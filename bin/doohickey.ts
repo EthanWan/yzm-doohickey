@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import * as yargs from 'yargs-parser'
 import yargsParser = require('yargs-parser')
 import * as semver from 'semver'
@@ -74,8 +75,6 @@ Options:
     logger.log(`
 doohickey verifyCommitMsg must have option -e or --edit.
 `)
-    // ingore other options
-    // require('../cli/verify-commit-msg')
     break
   default:
     if (args.h || args.help) {

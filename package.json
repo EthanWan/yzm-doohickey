@@ -2,7 +2,7 @@
   "name": "yzm-doohickey",
   "version": "0.1.2",
   "description": "JS, TS, CSS style guide for react project",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "EthanWan/yzm-doohickey",
   "author": {
     "name": "EthanWan",
@@ -32,7 +32,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "release": "tsc && npm publish",
-    "lint": "eslint --cache --ext .js,.ts **/*.ts",
+    "lint": "eslint --cache --ext .ts **/*.ts",
     "prettier": "prettier --write \"**/*\"",
     "test": "jest /test --testPathIgnorePatterns=/test/fixtures"
   },

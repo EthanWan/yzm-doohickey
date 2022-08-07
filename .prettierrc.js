@@ -1,3 +1,3 @@
 module.exports = {
-  ...require('./index').prettier,
+  ...require('./dist/index').prettier,
 }
