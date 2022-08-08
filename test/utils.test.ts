@@ -1,6 +1,7 @@
 import { spawn } from 'child_process'
 import * as fs from 'fs'
 import * as fsp from 'fs/promises'
+import * as fg from 'fast-glob'
 import {
   format,
   extendPackage,
@@ -9,14 +10,16 @@ import {
   isYarnUsed,
   runSpawn as run,
   getNodePkgManagerCommand as getNPMCommand,
+  mainExtension,
 } from '../cli/util'
 
 jest.mock('child_process')
 jest.mock('fs')
+jest.mock('fg')
 jest.mock('fs/promises')
 
 // @ts-ignore
-const { __clearMockFiles, __setMockFiles } = fs
+const { __clearMockFiles, __setMockFiles, stat } = fs
 // @ts-ignore
 const { writeFile, readFile, __clearMockFilesp, __setMockFilesp } = fsp
 
@@ -169,4 +172,18 @@ describe('util test', () => {
   test('getNodePkgManagerCommand returns yarn', () => {
     expect(getNPMCommand(true)).toBe(yarnCmd)
   })
+
+  test('getNodePkgManagerCommand returns yarn', () => {
+    expect(getNPMCommand(true)).toBe(yarnCmd)
+  })
+
+  // test('mainExtension returns main files extension', async () => {
+  //   __setMockFiles({
+  //     'pages/index.js': '',
+  //   })
+
+  //   await mainExtension(['js', 'ts'])
+  //   expect(stat).toBeCalledTimes(1)
+  //   expect(stat).toReturnWith(null)
+  // })
 })
