@@ -1,3 +1,3 @@
 module.exports = {
-  extends: [require('./index').eslint],
+  extends: [require('./dist/index').eslint],
 }

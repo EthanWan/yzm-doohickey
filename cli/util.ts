@@ -1,6 +1,8 @@
 import { writeFile as write, readFile as read } from 'fs/promises'
-import { existsSync } from 'fs'
+import { existsSync, stat } from 'fs'
+import { PathLike } from 'fs'
 import { spawn } from 'child_process'
+import * as fg from 'fast-glob'
 import chalk = require('chalk')
 import stripAnsi from 'strip-ansi'
 import { PackageJson } from '@npm/types'
@@ -139,4 +141,48 @@ export async function runSpawn(
       }
     })
   })
+}
+
+const isDirExists = (path: PathLike) => {
+  return new Promise(resolve => {
+    stat(path, (error, stats) => {
+      if (error) return resolve(false)
+      return resolve(stats ? stats.isDirectory() : false)
+    })
+  })
+}
+
+export async function mainExtension(
+  extension: string[],
+  path = process.cwd()
+): Promise<string> {
+  let sourceEnter = path
+
+  if (await isDirExists(`${path}/src`)) {
+    // Common src path
+    sourceEnter = `${path}/src`
+  } else if (await isDirExists(`${path}/pages`)) {
+    // Nextjs main enter
+    sourceEnter = `${path}/pages`
+  }
+
+  const fileLists = await Promise.all(
+    extension.map(item => {
+      return fg(`${sourceEnter}/**/*.${item}`, {
+        deep: 3,
+        ignore: ['**/node_modules/**/'],
+      })
+    })
+  )
+
+  let index = 0
+  fileLists.reduce((prev, next, i) => {
+    if (prev < next.length) {
+      index = i
+      return next.length
+    }
+    return prev
+  }, 0)
+
+  return extension[index]
 }
