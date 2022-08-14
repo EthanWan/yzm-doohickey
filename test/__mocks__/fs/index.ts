@@ -2,7 +2,6 @@ import * as path from 'path'
 import { PathLike } from 'fs'
 
 type Stats = {
-  isFile(): boolean
   isDirectory(): boolean
 }
 
@@ -84,17 +83,11 @@ export const existsSync = jest.fn(filePath => {
  */
 export const stat = jest.fn((filePath, cb) => {
   try {
-    const dir = path.dirname(filePath)
-    const file = path.basename(filePath)
     cb(null, {
       isDirectory: () => {
-        return !!mockFiles[dir]
-      },
-      isFile: () => {
-        return (mockFiles[dir] || []).some(item => item.file === file)
+        return !!mockFiles[filePath]
       },
     })
-    mockFiles[dir]
   } catch (error) {
     cb(error, null)
   }
