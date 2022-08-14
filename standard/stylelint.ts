@@ -4,7 +4,6 @@ module.exports = {
     // Including: The Idiomatic CSS Principles, Google's CSS Style Guide,
     // Airbnb's Styleguide, and @mdo's Code Guide.
     'stylelint-config-standard',
-
     'stylelint-config-css-modules',
     'stylelint-config-prettier',
   ],

@@ -3,7 +3,7 @@ import * as path from 'path'
 import yargsParser = require('yargs-parser')
 import { cosmiconfig } from 'cosmiconfig'
 import init from '../cli/init'
-import { runSpawn } from '../cli/util'
+import { runSpawn, mainExtension } from '../cli/util'
 
 jest.mock('cosmiconfig', () => ({
   cosmiconfig: jest.fn(),
@@ -16,6 +16,7 @@ jest.mock('../cli/util', () => {
     runSpawn: jest.fn(),
     isYarnUsed: jest.fn(),
     getNodePkgManagerCommand: jest.fn(),
+    mainExtension: jest.fn().mockResolvedValue('less'),
   }
 })
 ;(cosmiconfig as jest.Mock).mockReturnValue({
@@ -339,6 +340,20 @@ describe('init test', () => {
     expectFinalMockFiles([STYLELINT], {
       'lint-staged': {
         '**/*.less': 'doohickey lint:style --syntax less',
+      },
+    })
+  })
+
+  test('init extend package.json by "doohicky init -sl" with css', async () => {
+    ;(mainExtension as jest.Mock).mockResolvedValueOnce('css')
+    await init({
+      ...args,
+      l: true,
+      s: true,
+    })
+    expectFinalMockFiles([STYLELINT], {
+      'lint-staged': {
+        '**/*.css': 'doohickey lint:style',
       },
     })
   })

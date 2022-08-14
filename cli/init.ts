@@ -8,6 +8,7 @@ import {
   logger,
   isYarnUsed,
   runSpawn as run,
+  mainExtension,
   getNodePkgManagerCommand as getNPMCommand,
 } from './util'
 
@@ -147,9 +148,14 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
 
   // Defalut syntax less
   if (modules.includes('stylelint')) {
+    // TODO: sass scss post-css
+    const ext = await mainExtension(['css', 'less'])
+    const key = `**/*.${ext}`
+    const stylelint = {}
+    stylelint[key] = `doohickey lint:style${ext === 'less' ? ' --syntax less' : ''}`
+
     extension['lint-staged'] = {
-      // TODO: check CSS preprocessor
-      '**/*.less': 'doohickey lint:style --syntax less',
+      ...stylelint,
       ...(extension['lint-staged'] ?? {}),
     }
   }
