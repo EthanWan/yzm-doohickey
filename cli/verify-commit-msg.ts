@@ -11,7 +11,7 @@ interface DoohickeyConfig {
 
 function getCommitRE(config: DoohickeyConfig): RegExp {
   let commitRE =
-    /^(v\d+\.\d+\.\d+(-(alpha|beta|rc.\d+))?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\(.+\))?!?: .{1,50})/
+    /^(v\d+\.\d+\.\d+(-(alpha|beta|rc.\d+))?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\(.+\))?!?: .{1,50})$/
 
   if (config?.gitCommitMsg) {
     const scopes = config.gitCommitMsg?.scopes
@@ -19,7 +19,9 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
 
     if (scopes && !Array.isArray(scopes)) {
       console.error(
-        `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(' scopes must be a array type')}`
+        `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(
+          'Type gitCommitMsg.scopes must be a array'
+        )}`
       )
       process.exit(1)
     }
@@ -27,7 +29,7 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
     if (subjectLength && typeof subjectLength != 'number') {
       console.error(
         `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(
-          ' subjectLength must be a number type'
+          'Type gitCommitMsg.subjectLength must be a number'
         )}`
       )
       process.exit(1)
@@ -35,8 +37,8 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
 
     commitRE = new RegExp(
       `^(v\\d+\\.\\d+\\.\\d+(-(alpha|beta|rc.\\d+))?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\\(${
-        scopes ? scopes.join('|') : '.+'
-      }\\))${scopes ?? '?'}!?: .{1,${subjectLength ?? 50}})`
+        scopes ? '(' + scopes.join('|') + ')' : '.+'
+      }\\))${scopes ? '' : '?'}!?: .{1,${subjectLength ?? 50}})$`
     )
   }
 
@@ -49,10 +51,7 @@ async function verifyCommitMsg(msgPath: string) {
   const explorer = cosmiconfig('doohickey', {
     searchPlaces: ['package.json'],
   })
-
-  const file = await explorer.search().catch(err => {
-    return Promise.reject(err)
-  })
+  const file = await explorer.search()
 
   // doohickey config
   const config: DoohickeyConfig = file?.config
@@ -71,9 +70,9 @@ async function verifyCommitMsg(msgPath: string) {
         `    ${chalk.green(`fix(model): handle events on blur (close #28)`)}\n\n` +
         chalk.red(`  See .github/COMMIT_CONVENTION.md for more details.\n`) +
         chalk.red(
-          `  You can also use ${chalk.cyan(
-            `npm run commit`
-          )} to interactively generate a commit message.\n`
+          `  Check you config in ${chalk.cyan(
+            `package.json => doohickey`
+          )} if you has customized.\n`
         )
     )
     process.exit(1)
