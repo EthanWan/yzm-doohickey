@@ -108,6 +108,7 @@ export const writeFile = jest.fn((filePath, content) => {
  */
 export const readFile = jest.fn((filePath, options) => {
   const file = getFileByMockFS(filePath)
+  console.log(options)
 
   if (file) {
     return Promise.resolve(file.content)
