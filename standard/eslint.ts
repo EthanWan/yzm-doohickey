@@ -1,36 +1,10 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import * as fg from 'fast-glob'
+import { mainExtension } from '../cli/util'
 import tsEslintConfig from './tsEslintConfig'
 
-const isDirExists = path => {
-  return new Promise(resolve => {
-    fs.stat(path, (error, stats) => {
-      if (error) return resolve(false)
-      return resolve(stats ? stats.isDirectory() : false)
-    })
-  })
-}
-
 const isJsMoreTs = async path => {
-  let sourceEnter = path
-
-  if (await isDirExists(`${path}/src`)) {
-    // Common src path
-    sourceEnter = `${path}/src`
-  } else if (await isDirExists(`${path}/pages`)) {
-    // Nextjs main enter
-    sourceEnter = `${path}/pages`
-  }
-  const jsFiles = await fg(`${sourceEnter}/**/*.{js,jsx}`, {
-    deep: 3,
-    ignore: ['**/node_modules/**/'],
-  })
-  const tsFiles = await fg(`${sourceEnter}/**/*.{ts,tsx}`, {
-    deep: 3,
-    ignore: ['**/node_modules/**'],
-  })
-  return jsFiles.length >= tsFiles.length
+  return (await mainExtension(['js', 'ts'], path)) === 'js'
 }
 
 const isTsProject = fs.existsSync(path.join(process.cwd() || '.', './tsconfig.json'))

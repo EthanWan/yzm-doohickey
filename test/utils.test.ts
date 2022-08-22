@@ -15,7 +15,7 @@ import {
 
 jest.mock('child_process')
 jest.mock('fs')
-jest.mock('fg')
+jest.mock('fast-glob')
 jest.mock('fs/promises')
 
 // @ts-ignore
@@ -25,6 +25,8 @@ const { writeFile, readFile, __clearMockFilesp, __setMockFilesp } = fsp
 
 describe('util test', () => {
   afterEach(() => {
+    // @ts-ignore
+    ;(stat as jest.Mock).mockClear()
     __clearMockFiles()
     __clearMockFilesp()
 
@@ -174,16 +176,48 @@ describe('util test', () => {
   })
 
   test('getNodePkgManagerCommand returns yarn', () => {
-    expect(getNPMCommand(true)).toBe(yarnCmd)
+    expect(getNPMCommand(false)).toBe(npmCmd)
   })
 
-  // test('mainExtension returns main files extension', async () => {
-  //   __setMockFiles({
-  //     'pages/index.js': '',
-  //   })
+  test('mainExtension returns main files extension with src enter', async () => {
+    __setMockFiles({
+      './src/index.js': '',
+    })
+    // @ts-ignore
+    ;(fg as jest.Mock)
+      .mockResolvedValueOnce(Array(1).fill(0))
+      .mockResolvedValueOnce(Array(2).fill(0))
 
-  //   await mainExtension(['js', 'ts'])
-  //   expect(stat).toBeCalledTimes(1)
-  //   expect(stat).toReturnWith(null)
-  // })
+    const res = await mainExtension(['js', 'ts'], '.')
+    expect(stat).toBeCalledTimes(1)
+
+    expect(res).toBe('ts')
+  })
+
+  test('mainExtension returns main files extension with pages enter', async () => {
+    __setMockFiles({
+      './pages/index.js': '',
+    })
+    // @ts-ignore
+    ;(fg as jest.Mock)
+      .mockResolvedValueOnce(Array(2).fill(0))
+      .mockResolvedValueOnce(Array(1).fill(0))
+
+    const res = await mainExtension(['js', 'ts'], '.')
+    expect(stat).toBeCalledTimes(2)
+
+    expect(res).toBe('js')
+  })
+
+  test('mainExtension returns main files extension without main enter', async () => {
+    // @ts-ignore
+    ;(fg as jest.Mock)
+      .mockResolvedValueOnce(Array(2).fill(0))
+      .mockResolvedValueOnce(Array(1).fill(0))
+
+    const res = await mainExtension(['js', 'ts'], '.')
+    expect(stat).toBeCalledTimes(2)
+
+    expect(res).toBe('js')
+  })
 })
