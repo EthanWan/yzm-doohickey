@@ -1,7 +1,8 @@
 on:
   push:
     branches: 
-    - dev-0.1.0
+    - master
+  pull_request:
 jobs:
   test:
     runs-on: ubuntu-latest
