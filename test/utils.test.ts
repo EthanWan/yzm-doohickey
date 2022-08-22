@@ -13,7 +13,6 @@ import {
   mainExtension,
 } from '../cli/util'
 
-console.log('========L', fg)
 jest.mock('child_process')
 jest.mock('fs')
 jest.mock('fast-glob')

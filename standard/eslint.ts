@@ -4,7 +4,7 @@ import { mainExtension } from '../cli/util'
 import tsEslintConfig from './tsEslintConfig'
 
 const isJsMoreTs = async path => {
-  return (await mainExtension(path)) === 'js'
+  return (await mainExtension(['js', 'ts'], path)) === 'js'
 }
 
 const isTsProject = fs.existsSync(path.join(process.cwd() || '.', './tsconfig.json'))
