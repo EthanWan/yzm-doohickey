@@ -34,10 +34,11 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
       process.exit(1)
     }
 
+    const useScopes = scopes && scopes.length > 1
     commitRE = new RegExp(
       `^(v\\d+\\.\\d+\\.\\d+(-(alpha|beta|rc.\\d+))?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\\(${
-        scopes ? '(' + scopes.join('|') + ')' : '.+'
-      }\\))${scopes ? '' : '?'}!?: .{1,${subjectLength ?? 50}})$`
+        useScopes ? '(' + scopes.join('|') + ')' : '.+'
+      }\\))${useScopes ? '' : '?'}!?: .{1,${subjectLength ?? 50}})$`
     )
   }
 
