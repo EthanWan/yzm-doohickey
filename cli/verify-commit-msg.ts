@@ -11,7 +11,7 @@ interface DoohickeyConfig {
 
 function getCommitRE(config: DoohickeyConfig): RegExp {
   let commitRE =
-    /^(v\d+\.\d+\.\d+(-(alpha|beta|rc.\d+))?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\(.+\))?!?: .{1,50})$/
+    /^(v\d+\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\(.+\))?!?: .{1,50})$/
 
   if (config?.gitCommitMsg) {
     let scopes = config.gitCommitMsg?.scopes
@@ -36,7 +36,7 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
 
     const useScopes = scopes && scopes.length > 1
     commitRE = new RegExp(
-      `^(v\\d+\\.\\d+\\.\\d+(-(alpha|beta|rc.\\d+))?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\\(${
+      `^(v\\d+\\.\\d+\\.\\d+(-(alpha|beta|rc)\\.\\d+)?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\\(${
         useScopes ? '(' + scopes.join('|') + ')' : '.+'
       }\\))${useScopes ? '' : '?'}!?: .{1,${subjectLength ?? 50}})$`
     )
