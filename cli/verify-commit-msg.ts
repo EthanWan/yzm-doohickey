@@ -14,7 +14,7 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
     /^(v\d+\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\(.+\))?!?: .{1,50})$/
 
   if (config?.gitCommitMsg) {
-    let scopes = config.gitCommitMsg?.scopes
+    const scopes = config.gitCommitMsg?.scopes
     const subjectLength = config.gitCommitMsg?.subjectLength
 
     if (scopes && !Array.isArray(scopes)) {
@@ -68,7 +68,6 @@ function verifyCommitMsg(msgPath: string) {
           ) +
           `    ${chalk.green(`feat(compiler): add 'comments' option`)}\n` +
           `    ${chalk.green(`fix(model): handle events on blur (close #28)`)}\n\n` +
-          chalk.red(`  See .github/COMMIT_CONVENTION.md for more details.\n`) +
           chalk.red(
             `  Check you config in ${chalk.cyan(
               `package.json => doohickey`
@@ -78,7 +77,6 @@ function verifyCommitMsg(msgPath: string) {
       process.exit(1)
     }
   })
-
 }
 
 export default verifyCommitMsg

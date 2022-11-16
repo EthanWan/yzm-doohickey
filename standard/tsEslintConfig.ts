@@ -20,5 +20,5 @@ export default {
   'no-dupe-class-members': 'off',
   'require-atomic-updates': 'off',
   // support ts comment `///`
-  'spaced-comment': ["error", "always", { "markers": ["/"] }]
+  'spaced-comment': ['error', 'always', { markers: ['/'] }],
 }

@@ -32,7 +32,7 @@ const parserOptions = {
     ],
   },
   requireConfigFile: false,
-  project: './tsconfig.json',
+  project: ['./tsconfig.json'],
 }
 
 module.exports = {
