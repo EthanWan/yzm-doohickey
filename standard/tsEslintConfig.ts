@@ -19,4 +19,6 @@ export default {
   // 'node/shebang': 'off',
   'no-dupe-class-members': 'off',
   'require-atomic-updates': 'off',
+  // support ts comment `///`
+  'spaced-comment': ["error", "always", { "markers": ["/"] }]
 }
