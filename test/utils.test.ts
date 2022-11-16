@@ -8,6 +8,7 @@ import {
   logger,
   readJson,
   isYarnUsed,
+  isPnpmUsed,
   runSpawn as run,
   getNodePkgManagerCommand as getNPMCommand,
   mainExtension,
@@ -43,19 +44,6 @@ describe('util test', () => {
     expect(format('hello', 'world')).toBe('hello world')
   })
 
-  // test('logger.info have be called with corrent args', () => {
-  //   jest.spyOn(global.console, 'log')
-  //   jest.mock<{ bgBlue: { white: jest.Mock } }>('chalk', () => ({
-  //     bgBlue: {
-  //       white: jest.fn().mockReturnValueOnce('test-white'),
-  //     },
-  //   }))
-  //   logger.info('hello', 'info')
-
-  //   expect(chalk.bgBlue.white).toHaveBeenCalledWith(' INFO ')
-  //   expect(global.console.log).toHaveBeenCalledWith('test-white hello')
-  // })
-
   test('logger to be called ', () => {
     jest.spyOn(global.console, 'log')
     logger.log('')
@@ -76,7 +64,7 @@ describe('util test', () => {
   })
 
   test('readJson returns rejects if file is not exist', async () => {
-    await expect(readJson('package.json')).rejects
+    await expect(readJson('package.json')).rejects.toEqual({ name: 'error', code: 'ENOENT', message: 'file is not exist' })
     expect(readFile).toHaveBeenCalled()
     expect(readFile).toHaveBeenCalledTimes(1)
   })
@@ -158,25 +146,54 @@ describe('util test', () => {
   test("isYarnUsed returns false if there're yarn.lock and package-lock.json files", () => {
     __setMockFiles({
       'package-lock.json': '',
-      'yarn.json': '',
+      'yarn.lock': '',
     })
     expect(isYarnUsed()).toBe(false)
   })
 
+  test("isPnpmUsed returns true if there's pnpm-lock.yaml file only", () => {
+    __setMockFiles({
+      'pnpm-lock.yaml': '',
+    })
+    expect(isPnpmUsed()).toBe(true)
+  })
+
+  test("isPnpmUsed returns false if there's package-lock.json file only", () => {
+    __setMockFiles({
+      'package-lock.json': '',
+    })
+    expect(isPnpmUsed()).toBe(false)
+  })
+
+  test("isPnpmUsed returns false if there're yarn.lock and package-lock.json files", () => {
+    __setMockFiles({
+      'package-lock.json': '',
+      'pnpm-lock.yaml': '',
+    })
+    expect(isPnpmUsed()).toBe(false)
+  })
+
   const npmCmd = process.platform !== 'win32' ? 'npm' : 'npm.cmd'
   const yarnCmd = process.platform !== 'win32' ? 'yarn' : 'yarn.cmd'
+  const pnpmCmd = process.platform !== 'win32' ? 'pnpm' : 'pnpm.cmd'
 
   test('getNodePkgManagerCommand returns npm by default', () => {
     expect(getNPMCommand()).toBe(npmCmd)
-    expect(getNPMCommand()).toBe(getNPMCommand(false))
+    expect(getNPMCommand()).toBe(getNPMCommand())
+  })
+
+  test('getNodePkgManagerCommand returns pnpm', () => {
+    __setMockFiles({
+      'pnpm-lock.yaml': '',
+    })
+    expect(getNPMCommand()).toBe(pnpmCmd)
   })
 
   test('getNodePkgManagerCommand returns yarn', () => {
-    expect(getNPMCommand(true)).toBe(yarnCmd)
-  })
-
-  test('getNodePkgManagerCommand returns yarn', () => {
-    expect(getNPMCommand(false)).toBe(npmCmd)
+    __setMockFiles({
+      'yarn.lock': '',
+    })
+    expect(getNPMCommand()).toBe(yarnCmd)
   })
 
   test('mainExtension returns main files extension with src enter', async () => {

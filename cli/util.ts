@@ -94,8 +94,17 @@ export function isYarnUsed() {
   return existsSync('yarn.lock')
 }
 
-export function getNodePkgManagerCommand(yarn: boolean = isYarnUsed()): string {
-  return (yarn ? 'yarn' : 'npm') + (process.platform === 'win32' ? '.cmd' : '')
+export function isPnpmUsed() {
+  if (existsSync('package-lock.json')) {
+    return false
+  }
+  return existsSync('pnpm-lock.yaml')
+}
+
+export function getNodePkgManagerCommand(): string {
+  const yarn = isYarnUsed()
+  const pnpm = isPnpmUsed()
+  return (yarn ? 'yarn' : (pnpm ? 'pnpm' : 'npm')) + (process.platform === 'win32' ? '.cmd' : '')
 }
 
 export async function readJson(jsonPath: string): Promise<string> {

@@ -23,7 +23,7 @@ module.exports = {
     // webcomponent
     'selector-type-no-unknown': null,
     'value-keyword-case': ['lower', { ignoreProperties: ['composes'] }],
-    // ignore tailwind rules, 通过判断可以添加
+    // ignore tailwind rules
     "at-rule-no-unknown": [
       true,
       {
