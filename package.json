@@ -34,7 +34,7 @@
     "release": "tsc && npm publish",
     "lint": "eslint --cache --ext .ts **/*.ts",
     "prettier": "prettier --write \"**/*\"",
-    "test": "jest ./test/utils.test.ts --testPathIgnorePatterns=/test/fixtures"
+    "test": "jest ./test --testPathIgnorePatterns=/test/fixtures"
   },
   "dependencies": {
     "@babel/core": "^7.18.5",
