@@ -25,7 +25,7 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
       )
       process.exit(1)
     }
-    if (subjectLength && typeof subjectLength != 'number') {
+    if (subjectLength && typeof subjectLength !== 'number') {
       console.error(
         `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(
           'Type gitCommitMsg.subjectLength must be a number'
@@ -37,7 +37,7 @@ function getCommitRE(config: DoohickeyConfig): RegExp {
     const useScopes = scopes && scopes.length > 1
     commitRE = new RegExp(
       `^(v\\d+\\.\\d+\\.\\d+(-(alpha|beta|rc)\\.\\d+)?)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types)(\\(${
-        useScopes ? '(' + scopes.join('|') + ')' : '.+'
+        useScopes ? `(${scopes.join('|')})` : '.+'
       }\\))${useScopes ? '' : '?'}!?: .{1,${subjectLength ?? 50}})$`
     )
   }
@@ -62,17 +62,16 @@ function verifyCommitMsg(msgPath: string) {
       console.error(
         `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(
           `invalid commit message format.`
-        )}\n\n` +
-          chalk.red(
-            `  Proper commit message format is required for automated changelog generation. Examples:\n\n`
-          ) +
-          `    ${chalk.green(`feat(compiler): add 'comments' option`)}\n` +
-          `    ${chalk.green(`fix(model): handle events on blur (close #28)`)}\n\n` +
-          chalk.red(
+        )}\n\n${chalk.red(
+          `  Proper commit message format is required for automated changelog generation. Examples:\n\n`
+        )}    ${chalk.green(`feat(compiler): add 'comments' option`)}\n` +
+          `    ${chalk.green(
+            `fix(model): handle events on blur (close #28)`
+          )}\n\n${chalk.red(
             `  Check you config in ${chalk.cyan(
               `package.json => doohickey`
             )} if you has customized.\n`
-          )
+          )}`
       )
       process.exit(1)
     }

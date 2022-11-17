@@ -1,7 +1,7 @@
 /*
  * Alibaba's TypeScript style guide
  * URL: https://github.com/alibaba/f2e-spec/blob/main/docs/coding/6.typescript-style-guide.md
-*/
+ */
 
 export default {
   '@typescript-eslint/adjacent-overload-signatures': 'error',
@@ -19,17 +19,10 @@ export default {
   '@typescript-eslint/ban-tslint-comment': 'error',
   '@typescript-eslint/ban-types': 'off',
   'brace-style': 'off',
-  '@typescript-eslint/brace-style': [
-    'error',
-    '1tbs',
-    { allowSingleLine: true },
-  ],
+  '@typescript-eslint/brace-style': ['error', '1tbs', { allowSingleLine: true }],
   '@typescript-eslint/class-literal-property-style': ['warn', 'fields'],
   'comma-spacing': 'off',
-  '@typescript-eslint/comma-spacing': [
-    'error',
-    { before: false, after: true },
-  ],
+  '@typescript-eslint/comma-spacing': ['error', { before: false, after: true }],
   '@typescript-eslint/consistent-type-assertions': [
     'error',
     {

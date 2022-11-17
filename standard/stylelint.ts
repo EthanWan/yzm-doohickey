@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+
 const useTailwind = fs.existsSync(path.join(process.cwd() || '.', './tailwind.config.js'))
 
 module.exports = {
@@ -24,18 +25,13 @@ module.exports = {
     'selector-type-no-unknown': null,
     'value-keyword-case': ['lower', { ignoreProperties: ['composes'] }],
     // ignore tailwind rules
-    "at-rule-no-unknown": [
+    'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: useTailwind ? [
-          "tailwind",
-          "layer",
-          "apply",
-          "variants",
-          "responsive",
-          "screen"
-        ] : []
-      }
+        ignoreAtRules: useTailwind
+          ? ['tailwind', 'layer', 'apply', 'variants', 'responsive', 'screen']
+          : [],
+      },
     ],
   },
   ignoreFiles: ['**/*.js', '**/*.jsx', '**/*.tsx', '**/*.ts'],

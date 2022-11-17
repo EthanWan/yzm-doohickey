@@ -126,7 +126,7 @@ async function generateStyleLintConfig(module: ModuleName) {
   return generateConfigFile(module, '.stylelintrc.js', config)
 }
 
-async function extendLintStagedPackage(modules: Array<ModuleName>) {
+async function extendLintStagedPackage(moduleList: Array<ModuleName>) {
   const existing = await configExists('lint-staged')
   if (existing) {
     return
@@ -135,7 +135,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
   let extension: Partial<PackageJsonWithLintstaged> = {
     'lint-staged': {},
   }
-  if (modules.includes('eslint')) {
+  if (moduleList.includes('eslint')) {
     extension = {
       scripts: {
         'lint:js': 'doohickey lint:js --ext .js,.jsx,.ts,.tsx ',
@@ -147,7 +147,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
   }
 
   // Defalut syntax less
-  if (modules.includes('stylelint')) {
+  if (moduleList.includes('stylelint')) {
     // TODO: sass scss post-css
     const ext = await mainExtension(['css', 'less'])
     const key = `**/*.${ext}`
@@ -160,7 +160,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
     }
   }
 
-  if (modules.includes('prettier')) {
+  if (moduleList.includes('prettier')) {
     extension['lint-staged'] = {
       '**/*.{js,jsx,tsx,ts,less,md,json}': 'doohickey lint:prettier --write',
       ...(extension['lint-staged'] ?? {}),
@@ -169,7 +169,7 @@ async function extendLintStagedPackage(modules: Array<ModuleName>) {
   return extendPackage(extension)
 }
 
-async function initHusky(modules) {
+async function initHusky(moduleList) {
   try {
     await access('.husky')
     logger.log('')
@@ -198,7 +198,7 @@ async function initHusky(modules) {
     'npx --no-install doohickey verifyCommitMsg --edit $1',
   ])
 
-  if (modules.includes('lint-staged')) {
+  if (moduleList.includes('lint-staged')) {
     await run('npx', [
       'husky',
       'add',
@@ -208,7 +208,7 @@ async function initHusky(modules) {
   }
 }
 
-async function deal(module: ModuleName, modules: Array<ModuleName>): Promise<void> {
+async function deal(module: ModuleName, moduleList: Array<ModuleName>): Promise<void> {
   switch (module) {
     case 'eslint':
       await generateESLintConfig(module)
@@ -221,7 +221,7 @@ async function deal(module: ModuleName, modules: Array<ModuleName>): Promise<voi
       await generateStyleLintConfig(module)
       break
     case 'lint-staged':
-      await extendLintStagedPackage(modules)
+      await extendLintStagedPackage(moduleList)
       break
     default:
   }

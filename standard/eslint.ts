@@ -3,8 +3,8 @@ import * as path from 'path'
 import { mainExtension } from '../cli/util'
 import tsEslintConfig from './tsEslintConfig'
 
-const isJsMoreTs = async path => {
-  return (await mainExtension(['js', 'ts'], path)) === 'js'
+const isJsMoreTs = async entry => {
+  return (await mainExtension(['js', 'ts'], entry)) === 'js'
 }
 
 const isTsProject = fs.existsSync(path.join(process.cwd() || '.', './tsconfig.json'))
@@ -39,10 +39,7 @@ const parserOptions = {
 module.exports = {
   // The main configuration is the current one
   root: true,
-  extends: [
-    'ali/react',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint-config-ali/react', 'plugin:prettier/recommended'],
   parser: '@babel/eslint-parser',
   env: {
     browser: true,
@@ -54,8 +51,8 @@ module.exports = {
   },
   rules: {
     strict: ['error', 'never'],
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
   // Shared Settings
   settings: {
