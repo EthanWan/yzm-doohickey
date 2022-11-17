@@ -31,21 +31,20 @@ const parserOptions = {
       ['@babel/plugin-proposal-class-properties', { loose: true }],
     ],
   },
+  project: './tsconfig.json',
   requireConfigFile: false,
-  project: ['./tsconfig.json'],
+  createDefaultProgram: true,
 }
 
 module.exports = {
   // The main configuration is the current one
   root: true,
   extends: [
-    'google',
     'eslint:recommended',
     'plugin:prettier/recommended',
-    'plugin:react/recommended',
   ],
   parser: '@babel/eslint-parser',
-  plugins: ['react', 'unicorn', 'react-hooks', 'import'],
+  plugins: ['react', 'react-hooks', 'import'],
   env: {
     browser: true,
     node: true,
@@ -56,8 +55,8 @@ module.exports = {
   },
   rules: {
     strict: ['error', 'never'],
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     'require-jsdoc': 'off',
     'guard-for-in': 'off',
     'react/display-name': 0,
@@ -77,18 +76,11 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/jsx-one-expression-per-line': 0,
 
-    // eslint-plugin-react-hooks
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'error',
-
     // https://github.com/benmosher/eslint-plugin-import/tree/master/docs/rules
     'import/first': 'error',
     'import/no-amd': 'error',
     'import/no-webpack-loader-syntax': 'error',
     'import/order': 'warn',
-
-    // unicorn
-    // 'unicorn/prevent-abbreviations': 'off',
   },
   // Shared Settings
   settings: {
@@ -115,7 +107,7 @@ module.exports = {
         {
           files: ['**/*.{ts,tsx}'],
           parser: '@typescript-eslint/parser',
-          extends: ['plugin:@typescript-eslint/recommended'],
+          plugins: ['@typescript-eslint'],
           rules: tsEslintConfig,
         },
       ]

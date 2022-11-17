@@ -10,8 +10,8 @@ module.exports = {
   // Use single quotes instead of double quotes.
   singleQuote: true,
 
-  // User single quote in JSX
-  jsxSingleQuote: true,
+  // User single quote in JSX ❌
+  jsxSingleQuote: false,
 
   // Include parentheses around a sole arrow function parameter.
   // 'avoid'. Example: x => x
