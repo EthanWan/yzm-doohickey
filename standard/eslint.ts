@@ -40,11 +40,10 @@ module.exports = {
   // The main configuration is the current one
   root: true,
   extends: [
-    'eslint:recommended',
+    'ali/react',
     'plugin:prettier/recommended',
   ],
   parser: '@babel/eslint-parser',
-  plugins: ['react', 'react-hooks', 'import'],
   env: {
     browser: true,
     node: true,
@@ -57,30 +56,6 @@ module.exports = {
     strict: ['error', 'never'],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
-    'require-jsdoc': 'off',
-    'guard-for-in': 'off',
-    'react/display-name': 0,
-    'react/jsx-props-no-spreading': 0,
-    'react/state-in-constructor': 0,
-    'react/static-property-placement': 0,
-    // Too restrictive: https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/destructuring-assignment.md
-    'react/destructuring-assignment': 'off',
-    'react/jsx-filename-extension': 'off',
-    'react/no-array-index-key': 'warn',
-    'react/require-default-props': 0,
-    'react/jsx-fragments': 0,
-    'react/jsx-wrap-multilines': 0,
-    'react/prop-types': 0,
-    'react/forbid-prop-types': 0,
-    'react/sort-comp': 0,
-    'react/react-in-jsx-scope': 0,
-    'react/jsx-one-expression-per-line': 0,
-
-    // https://github.com/benmosher/eslint-plugin-import/tree/master/docs/rules
-    'import/first': 'error',
-    'import/no-amd': 'error',
-    'import/no-webpack-loader-syntax': 'error',
-    'import/order': 'warn',
   },
   // Shared Settings
   settings: {
@@ -99,7 +74,8 @@ module.exports = {
     'import/external-module-folders': ['node_modules', 'node_modules/@types'],
     polyfills: ['fetch', 'Promise', 'URL', 'object-assign'],
     react: {
-      version: '18.0.0',
+      pragma: 'React',
+      version: 'detect',
     },
   },
   overrides: isTsProject
